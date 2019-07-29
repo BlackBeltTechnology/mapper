@@ -6,9 +6,9 @@ import org.junit.jupiter.api.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.util.Calendar;
+import java.util.Date;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -78,6 +78,32 @@ public class DefaultCoercesTest {
     }
 
     @Test
+    @DisplayName("Test date - string conversion")
+    void testDate() {
+        final String str = "2019-07-29";
+        final Date dateValue = new Date(119, Calendar.JULY, 29);
+        log.debug("Date value: {}", dateValue);
+        final String dateString = coercer.coerce(dateValue, String.class);
+        log.debug(" - string: {}", dateString);
+        assertThat(dateString, equalTo(str));
+        assertThat(dateValue, equalTo(coercer.coerce(dateString, Date.class)));
+    }
+
+    @Test
+    @DisplayName("Test date - string conversion (with time)")
+    void testDateWithTime() {
+        final String strBase = "2019-07-29";
+        final String str = strBase + " 12:13:14";
+        final Date dateValue = new Date(119, Calendar.JULY, 29, 12, 13, 14);
+        final Date dateValue2 = new Date(119, Calendar.JULY, 29, 0, 0, 0);
+        log.debug("Date value (with time): {}", dateValue);
+        final String dateString = coercer.coerce(dateValue, String.class);
+        log.debug(" - string: {}", dateString);
+        assertThat(dateString, equalTo(strBase));
+        assertThat(dateValue2, equalTo(coercer.coerce(str, Date.class)));
+    }
+
+    @Test
     @DisplayName("Test double - string conversion")
     void testDouble() {
         final String str = "-9.99999999999999E10";
@@ -117,9 +143,15 @@ public class DefaultCoercesTest {
     }
 
     @Test
-    @DisplayName("Test local date - string conversion")
+    @DisplayName("Test local date - string conversion (with time)")
     void testLocalDate() {
-        final LocalDate localDate = coercer.coerce("2019-07-29", LocalDate.class);
+        final String str = "2019-07-29";
+        final LocalDate dateValue = LocalDate.of(2019, 07, 29);
+        log.debug("Local date value: {}", dateValue);
+        final String dateString = coercer.coerce(dateValue, String.class);
+        log.debug(" - string: {}", dateString);
+        assertThat(dateString, equalTo(str));
+        assertThat(dateValue, equalTo(coercer.coerce(dateString, LocalDate.class)));
     }
 
     @Test
@@ -137,12 +169,24 @@ public class DefaultCoercesTest {
     @Test
     @DisplayName("Test offset datetime - string conversion")
     void testOffsetDateTime() {
-        final OffsetDateTime offsetDateTime = coercer.coerce("2019-07-29T12:34:56.789+02:00", OffsetDateTime.class);
+        final String str = "2019-07-29T12:34:56.789+01:00";
+        final OffsetDateTime offsetDateTime = OffsetDateTime.of(2019, 07, 29, 12, 34, 56, 789000000, ZoneOffset.ofHours(1));
+        log.debug("Offset datetime value: {}", offsetDateTime);
+        final String offsetDateTimeString = coercer.coerce(offsetDateTime, String.class);
+        log.debug(" - string: {}", offsetDateTimeString);
+        assertThat(offsetDateTimeString, equalTo(str));
+        assertThat(offsetDateTime, equalTo(coercer.coerce(offsetDateTimeString, OffsetDateTime.class)));
     }
 
     @Test
     @DisplayName("Test zoned datetime - string conversion")
     void testZonedDateTime() {
-        final ZonedDateTime zonedDateTime = coercer.coerce("2019-07-29T12:34:56.789+02:00[Europe/Budapest]", ZonedDateTime.class);
+        final String str = "2019-07-29T12:34:56.789+02:00[Europe/Budapest]";
+        final ZonedDateTime zonedDateTime = ZonedDateTime.of(2019, 07, 29, 12, 34, 56, 789000000, ZoneId.of("Europe/Budapest"));
+        log.debug("Zoned datetime value: {}", zonedDateTime);
+        final String zonedDateTimeString = coercer.coerce(zonedDateTime, String.class);
+        log.debug(" - string: {}", zonedDateTimeString);
+        assertThat(zonedDateTimeString, equalTo(str));
+        assertThat(zonedDateTime, equalTo(coercer.coerce(zonedDateTimeString, ZonedDateTime.class)));
     }
 }
