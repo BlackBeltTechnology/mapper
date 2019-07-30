@@ -133,7 +133,8 @@ public class DefaultCoercesTest {
         ((DefaultConverterFactory) coercer.getConverterFactory()).date2string.setFormatter(dateWithTimeFormatter);
 
         final String str = "2019-07-29T12:13:14.123";
-        final Date dateValue = Date.from(LocalDateTime.of(2019, 7, 29, 12, 13, 14, 123000000).toInstant(ZoneOffset.ofHours(2)));;
+        final int offsetSeconds = new Date().getTimezoneOffset() * 60;
+        final Date dateValue = Date.from(LocalDateTime.of(2019, 7, 29, 12, 13, 14, 123000000).toInstant(ZoneOffset.ofTotalSeconds(-offsetSeconds)));
         log.debug("Date value (with time): {}", dateValue);
         final String dateString = coercer.coerce(dateValue, String.class);
         log.debug(" - string: {}", dateString);
