@@ -18,11 +18,12 @@ import java.util.Date;
  * - Boolean,
  * - Integer, Long, BigInteger, Float, Double, BigDecimal, Short, Byte,
  * - String, Character,
- * - Date, LocalDate, OffsetDateTime, ZonedDateTime, SqlDate, Timestamp,
+ * - Date, LocalDate, OffsetDateTime, ZonedDateTime, SqlDate, Timestamp, Calendar,
  * - enumerations (?)
  */
 public class DefaultConverterFactory extends AbstractConverterFactory {
 
+    private final CalendarToStringConverter calendar2string = new CalendarToStringConverter();
     private final Converter<Date, Long> date2long = new DateToLongConverter();
     final DateToStringConverter date2string = new DateToStringConverter();
     private final LocalDateToStringConverter localDate2string = new LocalDateToStringConverter();
@@ -39,6 +40,7 @@ public class DefaultConverterFactory extends AbstractConverterFactory {
     private final Converter<String, Byte> string2byte = new StringToByteConverter();
     final StringToDateConverter string2date = new StringToDateConverter();
     private final Converter<String, Double> string2double = new StringToDoubleConverter();
+    private final StringToCalendarConverter string2calendar = new StringToCalendarConverter();
     private final Converter<String, Float> string2float = new StringToFloatConverter();
     private final Converter<String, Integer> string2integer = new StringToIntegerConverter();
     private final StringToLocalDateConverter string2localDate = new StringToLocalDateConverter();
@@ -55,6 +57,7 @@ public class DefaultConverterFactory extends AbstractConverterFactory {
     private final ZonedDateTimeToStringConverter zonedDateTime2string = new ZonedDateTimeToStringConverter();
     private final ZonedDateTimeToTimestampConverter zonedDateTime2timestamp = new ZonedDateTimeToTimestampConverter();
 
+    private final CalendarFormatter calendarFormatter = new CalendarFormatter();
     private final DateFormatter dateFormatter = new DateFormatter();
     private final LocalDateFormatter localDateFormatter = new LocalDateFormatter();
     private final LocalDateTimeFormatter localDateTimeFormatter = new LocalDateTimeFormatter();
@@ -63,20 +66,22 @@ public class DefaultConverterFactory extends AbstractConverterFactory {
     private final TimestampFormatter timestampFormatter = new TimestampFormatter();
     private final ZonedDateTimeFormatter zonedDateTimeFormatter = new ZonedDateTimeFormatter();
 
-    private final Collection<Converter> converters = Arrays.asList(date2long, date2string, localDate2string,
-            localDateTime2string, localDateTime2timestamp, number2Date, offsetDateTime2string, offsetDateTime2timestamp,
-            sqlDate2string, string2boolean, string2bigDecimal, string2bigInteger, string2character, string2byte,
-            string2date, string2double, string2float, string2integer, string2localDate, string2long,
-            string2offsetDateTime, string2sqlDate, string2short, string2zonedDateTime, string2timestamp,
-            timestamp2localDateTime, timestamp2offsetDateTime, timestamp2string, timestamp2zonedDateTime,
-            zonedDateTime2string, zonedDateTime2timestamp);
+    private final Collection<Converter> converters = Arrays.asList(calendar2string, date2long, date2string,
+            localDate2string, localDateTime2string, localDateTime2timestamp, number2Date, offsetDateTime2string,
+            offsetDateTime2timestamp, sqlDate2string, string2boolean, string2bigDecimal, string2bigInteger,
+            string2calendar, string2character, string2byte, string2date, string2double, string2float, string2integer,
+            string2localDate, string2long, string2offsetDateTime, string2sqlDate, string2short, string2zonedDateTime,
+            string2timestamp, timestamp2localDateTime, timestamp2offsetDateTime, timestamp2string,
+            timestamp2zonedDateTime, zonedDateTime2string, zonedDateTime2timestamp);
 
     public DefaultConverterFactory() {
+        calendar2string.setFormatter(calendarFormatter);
         date2string.setFormatter(dateFormatter);
         localDate2string.setFormatter(localDateFormatter);
         localDateTime2string.setFormatter(localDateTimeFormatter);
         offsetDateTime2string.setFormatter(offsetDateTimeFormatter);
         sqlDate2string.setFormatter(sqlDateFormatter);
+        string2calendar.setFormatter(calendarFormatter);
         string2date.setFormatter(dateFormatter);
         string2localDate.setFormatter(localDateFormatter);
         string2offsetDateTime.setFormatter(offsetDateTimeFormatter);

@@ -12,6 +12,8 @@ import java.sql.Timestamp;
 import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -218,13 +220,33 @@ public class DefaultCoercesTest {
     @Test
     @DisplayName("Test zoned datetime - string conversion")
     void testZonedDateTime() {
-        final String str = "2019-07-29T12:34:56.123456789+02:00[Europe/Budapest]";
-        final ZonedDateTime zonedDateTime = ZonedDateTime.of(2019, 07, 29, 12, 34, 56, 123456789, ZoneId.of("Europe/Budapest"));
+        final String str = "2019-07-29T12:34:56.123456789+03:00[Europe/Bucharest]";
+        final ZonedDateTime zonedDateTime = ZonedDateTime.of(2019, 07, 29, 12, 34, 56, 123456789, ZoneId.of("Europe/Bucharest"));
         log.debug("Zoned datetime value: {}", zonedDateTime);
         final String zonedDateTimeString = coercer.coerce(zonedDateTime, String.class);
         log.debug(" - string: {}", zonedDateTimeString);
         assertThat(zonedDateTimeString, equalTo(str));
         assertThat(coercer.coerce(zonedDateTimeString, ZonedDateTime.class), equalTo(zonedDateTime));
+    }
+
+    @Test
+    @DisplayName("Test calendar - string conversion")
+    void testCalendar() {
+        final String str = "2019-07-30T01:02:03.123+03:00[Europe/Bucharest]";
+        final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Bucharest"));
+        calendar.set(2019, Calendar.JULY, 30, 1, 2, 3);
+        calendar.set(Calendar.MILLISECOND, 123);
+
+        log.debug("Calendar value: {}", calendar);
+        final String calendarString = coercer.coerce(calendar, String.class);
+        log.debug(" - string: {}", calendarString);
+        assertThat(calendarString, equalTo(str));
+        final Calendar calendar2 = coercer.coerce(calendarString, Calendar.class);
+
+        assertThat(calendar, instanceOf(GregorianCalendar.class));
+        assertThat(calendar2, instanceOf(GregorianCalendar.class));
+
+        assertThat(((GregorianCalendar)calendar2).toZonedDateTime(), equalTo(((GregorianCalendar)calendar).toZonedDateTime()));
     }
 
     @Test
@@ -267,5 +289,18 @@ public class DefaultCoercesTest {
         log.debug(" - string: {}", dateString);
         assertThat(dateString, equalTo(str));
         assertThat(coercer.coerce(dateString, java.sql.Date.class), equalTo(dateValue));
+    }
+
+    @Test
+    @DisplayName("Test date - string conversion (with time), time fragment is not supported")
+    void testSqlDateWithTime() {
+        final String str = "2019-07-29";
+        final Date date = Date.from(LocalDateTime.of(2019, 7, 29, 12, 13, 14, 123000000).toInstant(ZoneOffset.ofHours(2)));;
+        final java.sql.Date dateValue = new java.sql.Date(date.getTime());
+        log.debug("SQL date value (with time): {}", dateValue);
+        final String dateString = coercer.coerce(dateValue, String.class);
+        log.debug(" - string: {}", dateString);
+        assertThat(dateString, equalTo(str));
+        assertThat(coercer.coerce(str, java.sql.Date.class), equalTo(new java.sql.Date(119, Calendar.JULY, 29)));
     }
 }
