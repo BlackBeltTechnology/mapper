@@ -9,7 +9,7 @@ import java.time.format.DateTimeParseException;
 
 public class OffsetDateTimeFormatter implements Formatter<OffsetDateTime> {
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME;
+    private DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     @Override
     public String convertValueToString(final OffsetDateTime value) {

@@ -1,22 +1,26 @@
 package hu.blackbelt.mapper.impl;
 
-import hu.blackbelt.mapper.api.Coercer;
+import hu.blackbelt.mapper.api.ConverterException;
+import hu.blackbelt.mapper.api.Formatter;
+import hu.blackbelt.mapper.impl.formatters.DateWithTimeFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
 public class DefaultCoercesTest {
 
-    private Coercer coercer;
+    private DefaultCoercer coercer;
 
     @BeforeEach
     void setUp() {
@@ -37,7 +41,7 @@ public class DefaultCoercesTest {
         final String bigDecimalString = coercer.coerce(bigDecimal, String.class);
         log.debug(" - string: {}", bigDecimalString);
         assertThat(bigDecimalString, equalTo(str));
-        assertThat(bigDecimal, equalTo(coercer.coerce(bigDecimalString, BigDecimal.class)));
+        assertThat(coercer.coerce(bigDecimalString, BigDecimal.class), equalTo(bigDecimal));
     }
 
     @Test
@@ -49,7 +53,19 @@ public class DefaultCoercesTest {
         final String bigIntegerString = coercer.coerce(bigInteger, String.class);
         log.debug(" - string: {}", bigIntegerString);
         assertThat(bigIntegerString, equalTo(str));
-        assertThat(bigInteger, equalTo(coercer.coerce(bigIntegerString, BigInteger.class)));
+        assertThat(coercer.coerce(bigIntegerString, BigInteger.class), equalTo(bigInteger));
+    }
+
+    @Test
+    @DisplayName("Test null primitive conversion")
+    void testNullPrimitive() {
+        assertThat(coercer.coerce(null, boolean.class), equalTo(null));
+    }
+
+    @Test
+    @DisplayName("Test void conversion")
+    void testVoid() {
+        assertThat(coercer.coerce("abc", Void.class), equalTo(null));
     }
 
     @Test
@@ -65,16 +81,34 @@ public class DefaultCoercesTest {
         assertThat(falseString, equalTo(strFalse));
         assertThat(trueString, equalTo(strTrue));
 
-        assertThat(Boolean.FALSE, equalTo(coercer.coerce(falseString, Boolean.class)));
-        assertThat(Boolean.TRUE, equalTo(coercer.coerce(trueString, Boolean.class)));
+        assertThat(coercer.coerce(falseString, Boolean.class), equalTo(Boolean.FALSE));
+        assertThat(coercer.coerce(trueString, Boolean.class), equalTo(Boolean.TRUE));
 
-        assertThat(Boolean.FALSE, equalTo(coercer.coerce("False", Boolean.class)));
-        assertThat(Boolean.FALSE, equalTo(coercer.coerce("FALSE", Boolean.class)));
-        assertThat(Boolean.TRUE, equalTo(coercer.coerce("True", Boolean.class)));
-        assertThat(Boolean.TRUE, equalTo(coercer.coerce("TRUE", Boolean.class)));
+        assertThat(coercer.coerce("False", Boolean.class), equalTo(Boolean.FALSE));
+        assertThat(coercer.coerce("FALSE", Boolean.class), equalTo(Boolean.FALSE));
+        assertThat(coercer.coerce("True", Boolean.class), equalTo(Boolean.TRUE));
+        assertThat(coercer.coerce("TRUE", Boolean.class), equalTo(Boolean.TRUE));
 
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> equalTo(coercer.coerce(0, Boolean.class)));
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> equalTo(coercer.coerce(1, Boolean.class)));
+        assertThat(coercer.coerce(falseString, boolean.class), equalTo(false));
+        assertThat(coercer.coerce(trueString, boolean.class), equalTo(true));
+
+        assertThrows(UnsupportedOperationException.class, () -> coercer.coerce(0, Boolean.class));
+        assertThrows(UnsupportedOperationException.class, () -> coercer.coerce(1, Boolean.class));
+    }
+
+    @Test
+    @DisplayName("Test character - string conversion")
+    void testCharacter() {
+        final String str = "a";
+        final Character charValue = 'a';
+        log.debug("Character value: {}", charValue);
+        final String charString = coercer.coerce(charValue, String.class);
+        log.debug(" - string: {}", charString);
+        assertThat(charString, equalTo(str));
+        assertThat(coercer.coerce(charString, Character.class), equalTo(charValue));
+        assertThat(coercer.coerce(charString, Character.class), equalTo(charValue));
+
+        assertThrows(ConverterException.class, () -> coercer.coerce("abc", Character.class));
     }
 
     @Test
@@ -86,21 +120,23 @@ public class DefaultCoercesTest {
         final String dateString = coercer.coerce(dateValue, String.class);
         log.debug(" - string: {}", dateString);
         assertThat(dateString, equalTo(str));
-        assertThat(dateValue, equalTo(coercer.coerce(dateString, Date.class)));
+        assertThat(coercer.coerce(dateString, Date.class), equalTo(dateValue));
     }
 
     @Test
     @DisplayName("Test date - string conversion (with time)")
     void testDateWithTime() {
-        final String strBase = "2019-07-29";
-        final String str = strBase + " 12:13:14";
-        final Date dateValue = new Date(119, Calendar.JULY, 29, 12, 13, 14);
-        final Date dateValue2 = new Date(119, Calendar.JULY, 29, 0, 0, 0);
+        final Formatter<Date> dateWithTimeFormatter = new DateWithTimeFormatter();
+        ((DefaultConverterFactory) coercer.getConverterFactory()).string2date.setFormatter(dateWithTimeFormatter);
+        ((DefaultConverterFactory) coercer.getConverterFactory()).date2string.setFormatter(dateWithTimeFormatter);
+
+        final String str = "2019-07-29T12:13:14.123";
+        final Date dateValue = Date.from(LocalDateTime.of(2019, 7, 29, 12, 13, 14, 123000000).toInstant(ZoneOffset.ofHours(2)));;
         log.debug("Date value (with time): {}", dateValue);
         final String dateString = coercer.coerce(dateValue, String.class);
         log.debug(" - string: {}", dateString);
-        assertThat(dateString, equalTo(strBase));
-        assertThat(dateValue2, equalTo(coercer.coerce(str, Date.class)));
+        assertThat(dateString, equalTo(str));
+        assertThat(coercer.coerce(str, Date.class), equalTo(dateValue));
     }
 
     @Test
@@ -112,10 +148,8 @@ public class DefaultCoercesTest {
         final String doubleString = coercer.coerce(doubleValue, String.class);
         log.debug(" - string: {}", doubleString);
         assertThat(doubleString, equalTo(str));
-        assertThat(doubleValue, equalTo(coercer.coerce(doubleString, Double.class)));
-
-//        final Character charValue = coercer.coerce("a", Character.class);
-//        assertThat(charValue, equalTo('a'));
+        assertThat(coercer.coerce(doubleString, Double.class), equalTo(doubleValue));
+        assertThat(coercer.coerce(doubleString, double.class), equalTo(doubleValue));
     }
 
     @Test
@@ -127,7 +161,8 @@ public class DefaultCoercesTest {
         final String floatString = coercer.coerce(floatValue, String.class);
         log.debug(" - string: {}", floatString);
         assertThat(floatString, equalTo(str));
-        assertThat(floatValue, equalTo(coercer.coerce(floatString, Float.class)));
+        assertThat(coercer.coerce(floatString, Float.class), equalTo(floatValue));
+        assertThat(coercer.coerce(floatString, float.class), equalTo(floatValue));
     }
 
     @Test
@@ -139,7 +174,8 @@ public class DefaultCoercesTest {
         final String intString = coercer.coerce(intValue, String.class);
         log.debug(" - string: {}", intString);
         assertThat(intString, equalTo(str));
-        assertThat(intValue, equalTo(coercer.coerce(intString, Integer.class)));
+        assertThat(coercer.coerce(intString, Integer.class), equalTo(intValue));
+        assertThat(coercer.coerce(intString, int.class), equalTo(intValue));
     }
 
     @Test
@@ -151,7 +187,7 @@ public class DefaultCoercesTest {
         final String dateString = coercer.coerce(dateValue, String.class);
         log.debug(" - string: {}", dateString);
         assertThat(dateString, equalTo(str));
-        assertThat(dateValue, equalTo(coercer.coerce(dateString, LocalDate.class)));
+        assertThat(coercer.coerce(dateString, LocalDate.class), equalTo(dateValue));
     }
 
     @Test
@@ -163,30 +199,73 @@ public class DefaultCoercesTest {
         final String longString = coercer.coerce(longValue, String.class);
         log.debug(" - string: {}", longString);
         assertThat(longString, equalTo(str));
-        assertThat(longValue, equalTo(coercer.coerce(longString, Long.class)));
+        assertThat(coercer.coerce(longString, Long.class), equalTo(longValue));
+        assertThat(coercer.coerce(longString, long.class), equalTo(longValue));
     }
 
     @Test
     @DisplayName("Test offset datetime - string conversion")
     void testOffsetDateTime() {
-        final String str = "2019-07-29T12:34:56.789+01:00";
-        final OffsetDateTime offsetDateTime = OffsetDateTime.of(2019, 07, 29, 12, 34, 56, 789000000, ZoneOffset.ofHours(1));
+        final String str = "2019-07-29T12:34:56.123456789+01:00";
+        final OffsetDateTime offsetDateTime = OffsetDateTime.of(2019, 07, 29, 12, 34, 56, 123456789, ZoneOffset.ofHours(1));
         log.debug("Offset datetime value: {}", offsetDateTime);
         final String offsetDateTimeString = coercer.coerce(offsetDateTime, String.class);
         log.debug(" - string: {}", offsetDateTimeString);
         assertThat(offsetDateTimeString, equalTo(str));
-        assertThat(offsetDateTime, equalTo(coercer.coerce(offsetDateTimeString, OffsetDateTime.class)));
+        assertThat(coercer.coerce(offsetDateTimeString, OffsetDateTime.class), equalTo(offsetDateTime));
     }
 
     @Test
     @DisplayName("Test zoned datetime - string conversion")
     void testZonedDateTime() {
-        final String str = "2019-07-29T12:34:56.789+02:00[Europe/Budapest]";
-        final ZonedDateTime zonedDateTime = ZonedDateTime.of(2019, 07, 29, 12, 34, 56, 789000000, ZoneId.of("Europe/Budapest"));
+        final String str = "2019-07-29T12:34:56.123456789+02:00[Europe/Budapest]";
+        final ZonedDateTime zonedDateTime = ZonedDateTime.of(2019, 07, 29, 12, 34, 56, 123456789, ZoneId.of("Europe/Budapest"));
         log.debug("Zoned datetime value: {}", zonedDateTime);
         final String zonedDateTimeString = coercer.coerce(zonedDateTime, String.class);
         log.debug(" - string: {}", zonedDateTimeString);
         assertThat(zonedDateTimeString, equalTo(str));
-        assertThat(zonedDateTime, equalTo(coercer.coerce(zonedDateTimeString, ZonedDateTime.class)));
+        assertThat(coercer.coerce(zonedDateTimeString, ZonedDateTime.class), equalTo(zonedDateTime));
+    }
+
+    @Test
+    @DisplayName("Test timestamp - zoned datetime conversion")
+    void testTimestampZonedDateTime() {
+        final ZonedDateTime ts = ZonedDateTime.of(2019, 6, 30, 12, 38, 25, 123456789, ZoneId.of("Europe/Bucharest"));
+        final LocalDateTime localDateTime = ts.withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
+
+        log.debug("Original zoned datetime: {}", ts);
+        log.debug("  - local (UTC) datetime: {}", localDateTime);
+
+        final Timestamp timestamp = new Timestamp(localDateTime.toEpochSecond(ZoneOffset.UTC) * 1000L); // create timestamp by epoch!
+        log.debug("  - timestamp value: {}", timestamp);
+        final ZonedDateTime zonedDateTime = coercer.coerce(timestamp, ZonedDateTime.class);
+        log.debug("  - zoned datetime: {}", zonedDateTime);
+        final Timestamp timestamp2 = coercer.coerce(zonedDateTime, Timestamp.class);
+        log.debug("  - new timestamp: {}", timestamp2);
+        assertThat(timestamp.getTime(), equalTo(timestamp2.getTime()));
+    }
+
+    @Test
+    @DisplayName("Test timestamp - string conversion")
+    void testTimestamp() {
+        final String str = "2019-07-29T12:13:14.123456789";
+        final Timestamp timestampValue = new Timestamp(119, Calendar.JULY, 29, 12, 13, 14, 123456789);
+        log.debug("Timestamp value: {}", timestampValue);
+        final String dateString = coercer.coerce(timestampValue, String.class);
+        log.debug(" - string: {}", dateString);
+        assertThat(dateString, equalTo(str));
+        assertThat(coercer.coerce(dateString, Timestamp.class), equalTo(timestampValue));
+    }
+
+    @Test
+    @DisplayName("Test SQL date - string conversion")
+    void testSqlDate() {
+        final String str = "2019-07-29";
+        final java.sql.Date dateValue = new java.sql.Date(119, Calendar.JULY, 29);
+        log.debug("SQL date value: {}", dateValue);
+        final String dateString = coercer.coerce(dateValue, String.class);
+        log.debug(" - string: {}", dateString);
+        assertThat(dateString, equalTo(str));
+        assertThat(coercer.coerce(dateString, java.sql.Date.class), equalTo(dateValue));
     }
 }
