@@ -60,11 +60,7 @@ public abstract class AbstractConverterFactory implements ConverterFactory {
 
         synchronized (this) {
             if (converters.containsKey(key)) {
-                converters.get(key).add(converter);
-            } else {
-                final Set set = ConcurrentHashMap.newKeySet();
-                set.add(converter);
-                converters.put(key, set);
+                converters.get(key).remove(converter);
             }
         }
     }

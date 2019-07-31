@@ -31,6 +31,7 @@ public class DefaultCoercesTest {
 
     @AfterEach
     void tearDown() {
+        ((DefaultConverterFactory)(coercer).getConverterFactory()).destroy();
         coercer = null;
     }
 
