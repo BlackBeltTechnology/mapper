@@ -85,6 +85,7 @@
         <findbugs-skip>false</findbugs-skip>
         <qa-failOnError>true</qa-failOnError>
 
+        <joda-time-version>2.10.3</joda-time-version>
         <karaf-version>4.2.6</karaf-version>
     </properties>
 
@@ -599,6 +600,7 @@
             <modules>
                 <module>mapper-api</module>
                 <module>mapper-impl</module>
+                <module>mapper-jodatime</module>
                 <module>mapper-osgi</module>
             </modules>
         </profile>
