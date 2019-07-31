@@ -49,8 +49,69 @@ public class DefaultCoercer extends AbstractCoercer {
             }
         }
 
-        if (targetClass.isPrimitive() && result == null) {
+        if (targetClass.isPrimitive() && !targetClass.equals(Void.class) && result == null) {
             log.error("Non-null ({}) target value expected", targetClass.getName());
+        }
+
+        if (log.isTraceEnabled()) {
+            log.trace("Converted <{}> [{}] to <{}> [{}]", new Object[] {sourceValue, sourceValue != null ? sourceValue.getClass().getName() : "-", result, result != null ? result.getClass().getName() : "-"});
+        }
+
+        return result;
+    }
+
+    @Override
+    public <S, T> T coerce(final S sourceValue, final String targetClassName) {
+        Objects.requireNonNull(targetClassName, "Target class must bet set");
+
+        final String resolvedTargetClassName;
+        switch (targetClassName) {
+            case "byte": resolvedTargetClassName = Byte.class.getName(); break;
+            case "short": resolvedTargetClassName = Short.class.getName(); break;
+            case "int": resolvedTargetClassName = Integer.class.getName(); break;
+            case "long": resolvedTargetClassName = Long.class.getName(); break;
+            case "float": resolvedTargetClassName = Float.class.getName(); break;
+            case "double": resolvedTargetClassName = Double.class.getName(); break;
+            case "char": resolvedTargetClassName = Character.class.getName(); break;
+            case "boolean": resolvedTargetClassName = Boolean.class.getName(); break;
+            case "void": resolvedTargetClassName = Void.class.getName(); break;
+            default:
+                resolvedTargetClassName = targetClassName;
+        }
+
+        final T result;
+        if (sourceValue == null || "Void".equals(resolvedTargetClassName)) {
+            result = null;
+        } else if (resolvedTargetClassName.equals(sourceValue.getClass().getName())) {
+            result = (T) sourceValue;
+        } else {
+            final Class<S> sourceClass = (Class<S>) sourceValue.getClass();
+            final Collection<Converter<? extends S, T>> converters = getConverterFactory().getConvertersTo(resolvedTargetClassName).stream()
+                    .filter(c -> c.getSourceType().isAssignableFrom(sourceValue.getClass()))
+                    .map(c -> (Converter<? extends S, T>) c)
+                    .collect(Collectors.toList());
+            final Optional<Converter<S, T>> matchingTypeConverter = converters.stream().filter(c -> c.getSourceType() == sourceClass).map(c -> (Converter<S, T>) c).findAny();
+
+            if (matchingTypeConverter.isPresent()) {
+                result = matchingTypeConverter.get().apply(sourceValue);
+            } else if (!converters.isEmpty()) {
+                final Converter<S, T> converter = (Converter<S, T>) converters.iterator().next();
+                result = converter.apply(sourceValue);
+            } else if (resolvedTargetClassName.equals("java.lang.String")) {
+                result = (T) sourceValue.toString();
+            } else {
+                // TODO: check if source -> string -> target converters exists
+                // TODO: use external framework (ie. Jackson) to convert to to string and string to target type
+                throw new UnsupportedOperationException("Not supported yet");
+            }
+        }
+
+        if (!resolvedTargetClassName.equals(targetClassName) && !targetClassName.equals("java.lang.Void") && result == null) {
+            log.error("Non-null ({}) target value expected", targetClassName);
+        }
+
+        if (log.isTraceEnabled()) {
+            log.trace("Converted <{}> [{}] to <{}> [{}]", new Object[] {sourceValue, sourceValue != null ? sourceValue.getClass().getName() : "-", result, result != null ? result.getClass().getName() : "-"});
         }
 
         return result;
@@ -73,6 +134,8 @@ public class DefaultCoercer extends AbstractCoercer {
             return Character.class;
         } else if (primitiveClass == boolean.class) {
             return Boolean.class;
+        } else if (primitiveClass == void.class) {
+            return Void.class;
         } else {
             throw new UnsupportedOperationException("Unsupported primitive type");
         }

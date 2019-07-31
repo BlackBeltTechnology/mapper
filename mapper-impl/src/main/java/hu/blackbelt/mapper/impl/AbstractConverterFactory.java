@@ -6,10 +6,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -30,6 +27,14 @@ public abstract class AbstractConverterFactory implements ConverterFactory {
     public <T> Collection<Converter> getConvertersTo(final Class<T> targetType) {
         return converters.entrySet().stream()
                 .filter(e -> e.getKey().getTargetType() == targetType)
+                .flatMap(e -> e.getValue().stream())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public <T> Collection<Converter> getConvertersTo(final String targetTypeName) {
+        return converters.entrySet().stream()
+                .filter(e -> Objects.equals(e.getKey().getTargetType().getName(), targetTypeName))
                 .flatMap(e -> e.getValue().stream())
                 .collect(Collectors.toList());
     }

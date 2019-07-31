@@ -6,12 +6,14 @@ import hu.blackbelt.mapper.impl.numeric.*;
 import hu.blackbelt.mapper.impl.logical.StringToBooleanConverter;
 import hu.blackbelt.mapper.impl.string.*;
 import hu.blackbelt.mapper.impl.temporal.*;
+import hu.blackbelt.mapper.impl.uuid.StringToUuidConverter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Converter factory providing default converters:
@@ -49,6 +51,7 @@ public class DefaultConverterFactory extends AbstractConverterFactory {
     private final StringToSqlDateConverter string2sqlDate = new StringToSqlDateConverter();
     private final Converter<String, Short> string2short = new StringToShortConverter();
     private final StringToTimestamConverter string2timestamp = new StringToTimestamConverter();
+    private final Converter<String, UUID> string2uuid = new StringToUuidConverter();
     private final StringToZonedDateTimeConverter string2zonedDateTime = new StringToZonedDateTimeConverter();
     private final TimestampToLocalDateTimeConverter timestamp2localDateTime = new TimestampToLocalDateTimeConverter();
     private final TimestampToOffsetDateTimeConverter timestamp2offsetDateTime = new TimestampToOffsetDateTimeConverter();
@@ -70,8 +73,8 @@ public class DefaultConverterFactory extends AbstractConverterFactory {
             localDate2string, localDateTime2string, localDateTime2timestamp, number2Date, offsetDateTime2string,
             offsetDateTime2timestamp, sqlDate2string, string2boolean, string2bigDecimal, string2bigInteger,
             string2calendar, string2character, string2byte, string2date, string2double, string2float, string2integer,
-            string2localDate, string2long, string2offsetDateTime, string2sqlDate, string2short, string2zonedDateTime,
-            string2timestamp, timestamp2localDateTime, timestamp2offsetDateTime, timestamp2string,
+            string2localDate, string2long, string2offsetDateTime, string2sqlDate, string2short, string2timestamp,
+            string2uuid, string2zonedDateTime, timestamp2localDateTime, timestamp2offsetDateTime, timestamp2string,
             timestamp2zonedDateTime, zonedDateTime2string, zonedDateTime2timestamp);
 
     public DefaultConverterFactory() {

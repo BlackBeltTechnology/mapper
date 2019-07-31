@@ -27,6 +27,15 @@ public interface ConverterFactory {
     <T> Collection<Converter> getConvertersTo(Class<T> targetType);
 
     /**
+     * Get all converters that convert any values to a given type.
+     *
+     * @param targetTypeName target class name
+     * @param <T>            target type
+     * @return converters
+     */
+    <T> Collection<Converter> getConvertersTo(String targetTypeName);
+
+    /**
      * Get all converters that convert any values from a given type to a given type.
      *
      * @param sourceType source class

@@ -15,4 +15,15 @@ public interface Coercer {
      * @return target value
      */
     <S, T> T coerce(S sourceValue, Class<T> targetClass);
+
+    /**
+     * Performs a coercion from an input type to a desired output type.
+     *
+     * @param sourceValue source value
+     * @param targetClassName target class name
+     * @param <S> source type
+     * @param <T> target type
+     * @return target value
+     */
+    <S, T> T coerce(S sourceValue, String targetClassName);
 }
