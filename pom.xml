@@ -602,6 +602,8 @@
                 <module>mapper-impl</module>
                 <module>mapper-jodatime</module>
                 <module>mapper-osgi</module>
+                <module>features</module>
+                <module>kar</module>
             </modules>
         </profile>
 

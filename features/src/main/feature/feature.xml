@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features name="mapper-${project.version}"
+          xmlns="http://karaf.apache.org/xmlns/features/v1.5.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.5.0 http://karaf.apache.org/xmlns/features/v1.5.0">
+
+    <feature name="mapper-core" version="${project.version}" description="Mapper, Core">
+        <bundle>mvn:${project.groupId}/mapper-api/${project.version}</bundle>
+        <bundle>mvn:${project.groupId}/mapper-impl/${project.version}</bundle>
+    </feature>
+
+    <feature name="mapper-jodatime" version="${project.version}" description="Mapper, Joda-Time extension">
+        <feature>mapper-core</feature>
+        <feature>joda-time</feature>
+        <bundle>mvn:${project.groupId}/mapper-jodatime/${project.version}</bundle>
+    </feature>
+
+    <feature name="joda-time" version="${joda-time-version}" description="Joda-Time">
+        <bundle>mvn:joda-time/joda-time/${joda-time-version}</bundle>
+    </feature>
+</features>
