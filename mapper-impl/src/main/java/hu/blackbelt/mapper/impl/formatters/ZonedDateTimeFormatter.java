@@ -17,7 +17,7 @@ public class ZonedDateTimeFormatter implements Formatter<ZonedDateTime> {
     }
 
     @Override
-    public ZonedDateTime parseString(String str) {
+    public ZonedDateTime parseString(final String str) {
         try {
             return ZonedDateTime.from(formatter.parse(str));
         } catch (DateTimeParseException ex) {

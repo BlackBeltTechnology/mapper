@@ -3,7 +3,9 @@ package hu.blackbelt.mapper.jodatime;
 import hu.blackbelt.mapper.api.Converter;
 import hu.blackbelt.mapper.api.Formatter;
 import org.joda.time.LocalDate;
+import org.osgi.service.component.annotations.Component;
 
+@Component(immediate = true)
 public class LocalDateToStringConverter implements Converter<LocalDate, String> {
 
     private Formatter<LocalDate> formatter;

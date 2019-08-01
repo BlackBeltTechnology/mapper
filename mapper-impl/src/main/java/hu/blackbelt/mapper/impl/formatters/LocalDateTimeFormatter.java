@@ -17,7 +17,7 @@ public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
     }
 
     @Override
-    public LocalDateTime parseString(String str) {
+    public LocalDateTime parseString(final String str) {
         try {
             return LocalDateTime.from(formatter.parse(str));
         } catch (DateTimeParseException ex) {

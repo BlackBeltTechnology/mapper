@@ -130,8 +130,8 @@ public class DefaultCoercerTest {
     @DisplayName("Test date - string conversion (with time)")
     void testDateWithTime() {
         final Formatter<Date> dateWithTimeFormatter = new DateWithTimeFormatter();
-        ((DefaultConverterFactory) coercer.getConverterFactory()).string2date.setFormatter(dateWithTimeFormatter);
-        ((DefaultConverterFactory) coercer.getConverterFactory()).date2string.setFormatter(dateWithTimeFormatter);
+        ((DefaultConverterFactory) coercer.getConverterFactory()).STRING_TO_DATE.setFormatter(dateWithTimeFormatter);
+        ((DefaultConverterFactory) coercer.getConverterFactory()).DATE_TO_STRING.setFormatter(dateWithTimeFormatter);
 
         final String str = "2019-07-29T12:13:14.123";
         final int offsetSeconds = new Date().getTimezoneOffset() * 60;

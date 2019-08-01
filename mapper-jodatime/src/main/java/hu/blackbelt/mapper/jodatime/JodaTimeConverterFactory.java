@@ -6,27 +6,33 @@ import hu.blackbelt.mapper.jodatime.formatters.LocalDateFormatter;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class JodaTimeConverterFactory extends DefaultConverterFactory {
 
-    private final LocalDateToStringConverter localDate2string = new LocalDateToStringConverter();
-    private final StringToLocalDateConverter string2localDate = new StringToLocalDateConverter();
+    private final static LocalDateToStringConverter LOCAL_DATE_TO_STRING = new LocalDateToStringConverter();
+    private final static StringToLocalDateConverter STRING_TO_LOCAL_DATE = new StringToLocalDateConverter();
 
-    private final LocalDateFormatter localDateFormatter = new LocalDateFormatter();
+    private final static LocalDateFormatter LOCAL_DATE_FORMATTER = new LocalDateFormatter();
 
-    private final Collection<Converter> converters = Arrays.asList(localDate2string, string2localDate);
+    private final static Collection<Converter> CONVERTERS = Arrays.asList(LOCAL_DATE_TO_STRING, STRING_TO_LOCAL_DATE);
 
     public JodaTimeConverterFactory() {
         super();
-        localDate2string.setFormatter(localDateFormatter);
-        string2localDate.setFormatter(localDateFormatter);
 
-        converters.forEach(c -> registerConverter(c));
+        LOCAL_DATE_TO_STRING.setFormatter(LOCAL_DATE_FORMATTER);
+        STRING_TO_LOCAL_DATE.setFormatter(LOCAL_DATE_FORMATTER);
     }
 
     @Override
     public void destroy() {
-        converters.forEach(c -> unregisterConverter(c));
-        super.destroy();
+        reset();
+    }
+
+    @Override
+    protected Collection<Converter> getDefaultConverters() {
+        return Stream.concat(super.getDefaultConverters().stream(), CONVERTERS.stream())
+                .collect(Collectors.toList());
     }
 }

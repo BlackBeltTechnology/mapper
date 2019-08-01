@@ -19,7 +19,7 @@ public class CalendarFormatter implements Formatter<Calendar> {
     }
 
     @Override
-    public Calendar parseString(String str) {
+    public Calendar parseString(final String str) {
         try {
             return GregorianCalendar.from(ZonedDateTime.from(formatter.parse(str)));
         } catch (DateTimeParseException ex) {

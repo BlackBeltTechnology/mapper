@@ -2,6 +2,7 @@ package hu.blackbelt.mapper.impl;
 
 import hu.blackbelt.mapper.api.Converter;
 import hu.blackbelt.mapper.api.ConverterFactory;
+import hu.blackbelt.mapper.api.ConverterRegistry;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Slf4j
-public abstract class AbstractConverterFactory implements ConverterFactory {
+public abstract class AbstractConverterFactory implements ConverterFactory, ConverterRegistry {
 
     private final Map<Key, Collection<Converter>> converters = new ConcurrentHashMap<>();
 
@@ -46,6 +47,7 @@ public abstract class AbstractConverterFactory implements ConverterFactory {
         return converters.containsKey(key) ? converters.get(key) : Collections.emptyList();
     }
 
+    @Override
     public <S, T> void registerConverter(final Converter<S, T> converter) {
         final Key key = new Key(converter.getSourceType(), converter.getTargetType());
 
@@ -60,6 +62,7 @@ public abstract class AbstractConverterFactory implements ConverterFactory {
         }
     }
 
+    @Override
     public <S, T> void unregisterConverter(final Converter<S, T> converter) {
         final Key key = new Key(converter.getSourceType(), converter.getTargetType());
 
@@ -68,6 +71,21 @@ public abstract class AbstractConverterFactory implements ConverterFactory {
                 converters.get(key).remove(converter);
             }
         }
+    }
+
+    @Override
+    public final void reset() {
+        synchronized (this) {
+            converters.clear();
+            getDefaultConverters().forEach(c -> registerConverter(c));
+        }
+    }
+
+    /**
+     * Register default converters.
+     */
+    protected Collection<Converter> getDefaultConverters() {
+        return Collections.emptyList();
     }
 
     @lombok.Data

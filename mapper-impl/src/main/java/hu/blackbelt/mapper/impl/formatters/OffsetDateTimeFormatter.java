@@ -17,7 +17,7 @@ public class OffsetDateTimeFormatter implements Formatter<OffsetDateTime> {
     }
 
     @Override
-    public OffsetDateTime parseString(String str) {
+    public OffsetDateTime parseString(final String str) {
         try {
             return OffsetDateTime.from(formatter.parse(str));
         } catch (DateTimeParseException ex) {

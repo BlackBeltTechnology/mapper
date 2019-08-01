@@ -10,9 +10,17 @@
     </feature>
 
     <feature name="mapper-jodatime" version="${project.version}" description="Mapper, Joda-Time extension">
+        <feature dependency="true">scr</feature>
         <feature>mapper-core</feature>
         <feature>joda-time</feature>
         <bundle>mvn:${project.groupId}/mapper-jodatime/${project.version}</bundle>
+    </feature>
+
+    <feature name="mapper-osgi" version="${project.version}" description="Mapper, OSGi services">
+        <feature dependency="true">scr</feature>
+        <feature>mapper-core</feature>
+        <bundle>mvn:${project.groupId}/mapper-osgi/${project.version}</bundle>
+        <config name="hu.blackbelt.mapper.osgi.ExtendableCoercerService"></config>
     </feature>
 
     <feature name="joda-time" version="${joda-time-version}" description="Joda-Time">

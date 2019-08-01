@@ -10,10 +10,7 @@ import hu.blackbelt.mapper.impl.uuid.StringToUuidConverter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Converter factory providing default converters:
@@ -25,79 +22,84 @@ import java.util.UUID;
  */
 public class DefaultConverterFactory extends AbstractConverterFactory {
 
-    private final CalendarToStringConverter calendar2string = new CalendarToStringConverter();
-    private final Converter<Date, Long> date2long = new DateToLongConverter();
-    final DateToStringConverter date2string = new DateToStringConverter();
-    private final LocalDateToStringConverter localDate2string = new LocalDateToStringConverter();
-    private final LocalDateTimeToStringConverter localDateTime2string = new LocalDateTimeToStringConverter();
-    private final LocalDateTimeToTimestampConverter localDateTime2timestamp = new LocalDateTimeToTimestampConverter();
-    private final Converter<Number, Date> number2Date = new NumberToDateConverter();
-    private final OffsetDateTimeToStringConverter offsetDateTime2string = new OffsetDateTimeToStringConverter();
-    private final OffsetDateTimeToTimestampConverter offsetDateTime2timestamp = new OffsetDateTimeToTimestampConverter();
-    private final SqlDateToStringConverter sqlDate2string = new SqlDateToStringConverter();
-    private final Converter<String, Boolean> string2boolean = new StringToBooleanConverter();
-    private final Converter<String, BigDecimal> string2bigDecimal = new StringToBigDecimalConverter();
-    private final Converter<String, BigInteger> string2bigInteger = new StringToBigIntegerConverter();
-    private final Converter<String, Character> string2character = new StringToCharacterConverter();
-    private final Converter<String, Byte> string2byte = new StringToByteConverter();
-    final StringToDateConverter string2date = new StringToDateConverter();
-    private final Converter<String, Double> string2double = new StringToDoubleConverter();
-    private final StringToCalendarConverter string2calendar = new StringToCalendarConverter();
-    private final Converter<String, Float> string2float = new StringToFloatConverter();
-    private final Converter<String, Integer> string2integer = new StringToIntegerConverter();
-    private final StringToLocalDateConverter string2localDate = new StringToLocalDateConverter();
-    private final Converter<String, Long> string2long = new StringToLongConverter();
-    private final StringToOffsetDateTimeConverter string2offsetDateTime = new StringToOffsetDateTimeConverter();
-    private final StringToSqlDateConverter string2sqlDate = new StringToSqlDateConverter();
-    private final Converter<String, Short> string2short = new StringToShortConverter();
-    private final StringToTimestamConverter string2timestamp = new StringToTimestamConverter();
-    private final Converter<String, UUID> string2uuid = new StringToUuidConverter();
-    private final StringToZonedDateTimeConverter string2zonedDateTime = new StringToZonedDateTimeConverter();
-    private final TimestampToLocalDateTimeConverter timestamp2localDateTime = new TimestampToLocalDateTimeConverter();
-    private final TimestampToOffsetDateTimeConverter timestamp2offsetDateTime = new TimestampToOffsetDateTimeConverter();
-    private final TimestampToStringConverter timestamp2string = new TimestampToStringConverter();
-    private final TimestampToZonedDateTimeConverter timestamp2zonedDateTime = new TimestampToZonedDateTimeConverter();
-    private final ZonedDateTimeToStringConverter zonedDateTime2string = new ZonedDateTimeToStringConverter();
-    private final ZonedDateTimeToTimestampConverter zonedDateTime2timestamp = new ZonedDateTimeToTimestampConverter();
+    private final static CalendarToStringConverter CALENDAR_TO_STRING = new CalendarToStringConverter();
+    private final static Converter<Date, Long> DATE_TO_LONG = new DateToLongConverter();
+    final static DateToStringConverter DATE_TO_STRING = new DateToStringConverter();
+    private final static LocalDateToStringConverter LOCAL_DATE_TO_STRING = new LocalDateToStringConverter();
+    private final static LocalDateTimeToStringConverter LOCAL_DATE_TIME_TO_STRING = new LocalDateTimeToStringConverter();
+    private final static LocalDateTimeToTimestampConverter LOCAL_DATETIME_TO_TIMESTAMP = new LocalDateTimeToTimestampConverter();
+    private final static Converter<Number, Date> NUMBER_TO_DATE = new NumberToDateConverter();
+    private final static OffsetDateTimeToStringConverter OFFSET_DATETIME_TO_STRING = new OffsetDateTimeToStringConverter();
+    private final static OffsetDateTimeToTimestampConverter OFFSET_DATETIME_TO_TIMESTAMP = new OffsetDateTimeToTimestampConverter();
+    private final static SqlDateToStringConverter SQL_DATE_TO_STRING = new SqlDateToStringConverter();
+    private final static Converter<String, Boolean> STRING_TO_BOOLEAN = new StringToBooleanConverter();
+    private final static Converter<String, BigDecimal> STRING_TO_BIGDECIMAL = new StringToBigDecimalConverter();
+    private final static Converter<String, BigInteger> STRING_TO_BIGINTEGER = new StringToBigIntegerConverter();
+    private final static Converter<String, Character> STRING_TO_CHARACTER = new StringToCharacterConverter();
+    private final static Converter<String, Byte> STRING_TO_BYTE = new StringToByteConverter();
+    final static StringToDateConverter STRING_TO_DATE = new StringToDateConverter();
+    private final static Converter<String, Double> STRING_TO_DOUBLE = new StringToDoubleConverter();
+    private final static StringToCalendarConverter STRING_TO_CALENDAR = new StringToCalendarConverter();
+    private final static Converter<String, Float> STRING_TO_FLOAT = new StringToFloatConverter();
+    private final static Converter<String, Integer> STRING_TO_INTEGER = new StringToIntegerConverter();
+    private final static StringToLocalDateConverter STRING_TO_LOCAL_DATE = new StringToLocalDateConverter();
+    private final static Converter<String, Long> STRING_TO_LONG = new StringToLongConverter();
+    private final static StringToOffsetDateTimeConverter STRING_TO_OFFSET_DATETIME = new StringToOffsetDateTimeConverter();
+    private final static StringToSqlDateConverter STRING_TO_SQL_DATE = new StringToSqlDateConverter();
+    private final static Converter<String, Short> STRING_TO_SHORT = new StringToShortConverter();
+    private final static StringToTimestampConverter STRING_TO_TIMESTAMP = new StringToTimestampConverter();
+    private final static Converter<String, UUID> STRING_TO_UUID = new StringToUuidConverter();
+    private final static StringToZonedDateTimeConverter STRING_TO_ZONED_DATETIME = new StringToZonedDateTimeConverter();
+    private final static TimestampToLocalDateTimeConverter TIMESTAMP_TO_LOCAL_DATETIME = new TimestampToLocalDateTimeConverter();
+    private final static TimestampToOffsetDateTimeConverter TIMESTAMP_TO_OFFSET_DATETIME = new TimestampToOffsetDateTimeConverter();
+    private final static TimestampToStringConverter TIMESTAMP_TO_STRING = new TimestampToStringConverter();
+    private final static TimestampToZonedDateTimeConverter TIMESTAMP_TO_ZONED_DATETIME = new TimestampToZonedDateTimeConverter();
+    private final static ZonedDateTimeToStringConverter ZONED_DATETIME_TO_STRING = new ZonedDateTimeToStringConverter();
+    private final static ZonedDateTimeToTimestampConverter ZONED_DATETIME_TO_TIMESTAMP = new ZonedDateTimeToTimestampConverter();
 
-    private final CalendarFormatter calendarFormatter = new CalendarFormatter();
-    private final DateFormatter dateFormatter = new DateFormatter();
-    private final LocalDateFormatter localDateFormatter = new LocalDateFormatter();
-    private final LocalDateTimeFormatter localDateTimeFormatter = new LocalDateTimeFormatter();
-    private final OffsetDateTimeFormatter offsetDateTimeFormatter = new OffsetDateTimeFormatter();
-    private final SqlDateFormatter sqlDateFormatter = new SqlDateFormatter();
-    private final TimestampFormatter timestampFormatter = new TimestampFormatter();
-    private final ZonedDateTimeFormatter zonedDateTimeFormatter = new ZonedDateTimeFormatter();
+    private final static CalendarFormatter CALENDAR_FORMATTER = new CalendarFormatter();
+    private final static DateFormatter DATE_FORMATTER = new DateFormatter();
+    private final static LocalDateFormatter LOCAL_DATE_FORMATTER = new LocalDateFormatter();
+    private final static LocalDateTimeFormatter LOCAL_DATETIME_FORMATTER = new LocalDateTimeFormatter();
+    private final static OffsetDateTimeFormatter OFFSET_DATETIME_FORMATTER = new OffsetDateTimeFormatter();
+    private final static SqlDateFormatter SQL_DATE_FORMATTER = new SqlDateFormatter();
+    private final static TimestampFormatter TIMESTAMP_FORMATTER = new TimestampFormatter();
+    private final static ZonedDateTimeFormatter ZONED_DATETIME_FORMATTER = new ZonedDateTimeFormatter();
 
-    private final Collection<Converter> converters = Arrays.asList(calendar2string, date2long, date2string,
-            localDate2string, localDateTime2string, localDateTime2timestamp, number2Date, offsetDateTime2string,
-            offsetDateTime2timestamp, sqlDate2string, string2boolean, string2bigDecimal, string2bigInteger,
-            string2calendar, string2character, string2byte, string2date, string2double, string2float, string2integer,
-            string2localDate, string2long, string2offsetDateTime, string2sqlDate, string2short, string2timestamp,
-            string2uuid, string2zonedDateTime, timestamp2localDateTime, timestamp2offsetDateTime, timestamp2string,
-            timestamp2zonedDateTime, zonedDateTime2string, zonedDateTime2timestamp);
+    private final static Collection<Converter> CONVERTERS = Arrays.asList(CALENDAR_TO_STRING, DATE_TO_LONG, DATE_TO_STRING,
+            LOCAL_DATE_TO_STRING, LOCAL_DATE_TIME_TO_STRING, LOCAL_DATETIME_TO_TIMESTAMP, NUMBER_TO_DATE, OFFSET_DATETIME_TO_STRING,
+            OFFSET_DATETIME_TO_TIMESTAMP, SQL_DATE_TO_STRING, STRING_TO_BOOLEAN, STRING_TO_BIGDECIMAL, STRING_TO_BIGINTEGER,
+            STRING_TO_CALENDAR, STRING_TO_CHARACTER, STRING_TO_BYTE, STRING_TO_DATE, STRING_TO_DOUBLE, STRING_TO_FLOAT, STRING_TO_INTEGER,
+            STRING_TO_LOCAL_DATE, STRING_TO_LONG, STRING_TO_OFFSET_DATETIME, STRING_TO_SQL_DATE, STRING_TO_SHORT, STRING_TO_TIMESTAMP,
+            STRING_TO_UUID, STRING_TO_ZONED_DATETIME, TIMESTAMP_TO_LOCAL_DATETIME, TIMESTAMP_TO_OFFSET_DATETIME, TIMESTAMP_TO_STRING,
+            TIMESTAMP_TO_ZONED_DATETIME, ZONED_DATETIME_TO_STRING, ZONED_DATETIME_TO_TIMESTAMP);
 
     public DefaultConverterFactory() {
-        calendar2string.setFormatter(calendarFormatter);
-        date2string.setFormatter(dateFormatter);
-        localDate2string.setFormatter(localDateFormatter);
-        localDateTime2string.setFormatter(localDateTimeFormatter);
-        offsetDateTime2string.setFormatter(offsetDateTimeFormatter);
-        sqlDate2string.setFormatter(sqlDateFormatter);
-        string2calendar.setFormatter(calendarFormatter);
-        string2date.setFormatter(dateFormatter);
-        string2localDate.setFormatter(localDateFormatter);
-        string2offsetDateTime.setFormatter(offsetDateTimeFormatter);
-        string2sqlDate.setFormatter(sqlDateFormatter);
-        string2timestamp.setFormatter(timestampFormatter);
-        string2zonedDateTime.setFormatter(zonedDateTimeFormatter);
-        timestamp2string.setFormatter(timestampFormatter);
-        zonedDateTime2string.setFormatter(zonedDateTimeFormatter);
+        CALENDAR_TO_STRING.setFormatter(CALENDAR_FORMATTER);
+        DATE_TO_STRING.setFormatter(DATE_FORMATTER);
+        LOCAL_DATE_TO_STRING.setFormatter(LOCAL_DATE_FORMATTER);
+        LOCAL_DATE_TIME_TO_STRING.setFormatter(LOCAL_DATETIME_FORMATTER);
+        OFFSET_DATETIME_TO_STRING.setFormatter(OFFSET_DATETIME_FORMATTER);
+        SQL_DATE_TO_STRING.setFormatter(SQL_DATE_FORMATTER);
+        STRING_TO_CALENDAR.setFormatter(CALENDAR_FORMATTER);
+        STRING_TO_DATE.setFormatter(DATE_FORMATTER);
+        STRING_TO_LOCAL_DATE.setFormatter(LOCAL_DATE_FORMATTER);
+        STRING_TO_OFFSET_DATETIME.setFormatter(OFFSET_DATETIME_FORMATTER);
+        STRING_TO_SQL_DATE.setFormatter(SQL_DATE_FORMATTER);
+        STRING_TO_TIMESTAMP.setFormatter(TIMESTAMP_FORMATTER);
+        STRING_TO_ZONED_DATETIME.setFormatter(ZONED_DATETIME_FORMATTER);
+        TIMESTAMP_TO_STRING.setFormatter(TIMESTAMP_FORMATTER);
+        ZONED_DATETIME_TO_STRING.setFormatter(ZONED_DATETIME_FORMATTER);
 
-        converters.forEach(c -> registerConverter(c));
+        reset();
     }
 
     public void destroy() {
-        converters.forEach(c -> unregisterConverter(c));
+        reset();
+    }
+
+    @Override
+    protected Collection<Converter> getDefaultConverters() {
+        return CONVERTERS;
     }
 }
