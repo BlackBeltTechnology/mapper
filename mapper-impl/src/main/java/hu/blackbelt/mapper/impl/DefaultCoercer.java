@@ -121,30 +121,21 @@ public class DefaultCoercer extends AbstractCoercer {
         } else if (!converters.isEmpty()) {
             final Converter<S, T> converter = (Converter<S, T>) converters.iterator().next();
             return converter.apply(sourceValue);
-        } else if (String.class == resolvedTargetClass) {
-            return (T) sourceValue.toString();
 //        } else if (external_framework_found_supporting_direct_mapping) {
 //        // TODO: try to use external framework (ie. Jackson) to continue
+        } else if (String.class == resolvedTargetClass) {
+            return (T) sourceValue.toString();
         } else {
             // try to convert value to String and the result to the expected type
-            final Optional<String> str = converterFactory.getConverters(sourceClass, String.class).stream().findAny()
-                    .map(c -> (String) c.apply(sourceValue));
-            if (str.isPresent()) {
-                final Optional<T> converted = converterFactory.getConverters(String.class, resolvedTargetClass).stream().findAny()
-                        .map(c -> (T) c.apply(str));
-                if (converted.isPresent()) {
-                    return converted.get();
-                } else {
-                    // no String -> target type converter found
-                    // TODO: try to use external framework (ie. Jackson) to continue
-
-                    throw new UnsupportedOperationException();
+            final String str = convertToString(sourceValue);
+            final T converted = coerceUsingConverterByClass(str, resolvedTargetClass);
+            if (converted != null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Converting {} to {} by converters (target is defined by class): {}", new Object[]{sourceValue, resolvedTargetClass.getName(), sourceClass.getName() + " -> " + String.class.getName() + " -> " + (converted != null ? converted.getClass().getName() : "?")});
                 }
+                return converted;
             } else {
-                // no source -> String converter found
-                // TODO: try to use external framework (ie. Jackson) to continue
-
-                throw new UnsupportedOperationException();
+                throw new UnsupportedOperationException("No string parser found for the given type");
             }
         }
     }
@@ -171,32 +162,32 @@ public class DefaultCoercer extends AbstractCoercer {
         } else if (!converters.isEmpty()) {
             final Converter<S, T> converter = (Converter<S, T>) converters.iterator().next();
             return converter.apply(sourceValue);
-        } else if (resolvedTargetClassName.equals(String.class.getName())) {
-            return (T) sourceValue.toString();
 //            } else if (external_framework_found_supporting_direct_mapping) {
 //                // TODO: try to use external framework (ie. Jackson) to continue
+        } else if (resolvedTargetClassName.equals(String.class.getName())) {
+            return (T) sourceValue.toString();
         } else {
             // try to convert value to String and the result to the expected type
-            final Optional<String> str = converterFactory.getConverters(sourceClass, String.class).stream().findAny()
-                    .map(c -> (String) c.apply(sourceValue));
-            if (str.isPresent()) {
-                final Optional<T> converted = converterFactory.getConvertersFrom(String.class).stream()
-                        .filter(c -> resolvedTargetClassName.equals(c.getTargetType().getName())).findAny()
-                        .map(c -> (T) c.apply(str));
-                if (converted.isPresent()) {
-                    return converted.get();
-                } else {
-                    // no String -> target type converter found
-                    // TODO: try to use external framework (ie. Jackson) to continue
-
-                    throw new UnsupportedOperationException();
+            final String str = convertToString(sourceValue);
+            final T converted = coerceUsingConverterByClassName(str, resolvedTargetClassName);
+            if (converted != null) {
+                if (log.isDebugEnabled()) {
+                    log.info("Converting {} to {} by converters (target is defined by class name): {}", new Object[]{sourceValue, resolvedTargetClassName, sourceClass.getName() + " -> " + String.class.getName() + " -> " + (converted != null ? converted.getClass().getName() : "?")});
                 }
+                return converted;
             } else {
-                // no source -> String converter found
-                // TODO: try to use external framework (ie. Jackson) to continue
-
-                throw new UnsupportedOperationException();
+                throw new UnsupportedOperationException("No string parser found for the given type name");
             }
+        }
+    }
+
+    private String convertToString(final Object sourceValue) {
+        // try to convert value to String and the result to the expected type
+        final String str = coerceUsingConverterByClass(sourceValue, String.class);
+        if (str != null) {
+            return str;
+        } else {
+            throw new IllegalStateException("Unable to convert object to String");
         }
     }
 

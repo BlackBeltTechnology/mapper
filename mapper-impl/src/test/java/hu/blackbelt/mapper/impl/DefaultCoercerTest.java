@@ -92,11 +92,13 @@ public class DefaultCoercerTest {
         assertThat(coercer.coerce("True", Boolean.class), equalTo(Boolean.TRUE));
         assertThat(coercer.coerce("TRUE", Boolean.class), equalTo(Boolean.TRUE));
 
+        assertThat(coercer.coerce("yes", Boolean.class), equalTo(Boolean.FALSE));
+
         assertThat(coercer.coerce(falseString, boolean.class), equalTo(false));
         assertThat(coercer.coerce(trueString, boolean.class), equalTo(true));
 
-        assertThrows(UnsupportedOperationException.class, () -> coercer.coerce(0, Boolean.class));
-        assertThrows(UnsupportedOperationException.class, () -> coercer.coerce(1, Boolean.class));
+        assertThat(coercer.coerce(0, Boolean.class), equalTo(false));
+        assertThat(coercer.coerce(1, Boolean.class), equalTo(false));
     }
 
     @Test
@@ -192,6 +194,18 @@ public class DefaultCoercerTest {
         log.debug(" - string: {}", dateString);
         assertThat(dateString, equalTo(str));
         assertThat(coercer.coerce(dateString, LocalDate.class), equalTo(dateValue));
+    }
+
+    @Test
+    @DisplayName("Test local date time - string conversion (with time)")
+    void testLocalDateTime() {
+        final String str = "2019-07-29T16:34:12.123456789";
+        final LocalDateTime localDateTimeValue = LocalDateTime.of(2019, 07, 29, 16, 34, 12, 123456789);
+        log.debug("Local date time value: {}", localDateTimeValue);
+        final String localDateTimeString = coercer.coerce(localDateTimeValue, String.class);
+        log.debug(" - string: {}", localDateTimeString);
+        assertThat(localDateTimeString, equalTo(str));
+        assertThat(coercer.coerce(localDateTimeString, LocalDateTime.class), equalTo(localDateTimeValue));
     }
 
     @Test
@@ -304,5 +318,29 @@ public class DefaultCoercerTest {
         log.debug(" - string: {}", dateString);
         assertThat(dateString, equalTo(str));
         assertThat(coercer.coerce(str, java.sql.Date.class), equalTo(new java.sql.Date(119, Calendar.JULY, 29)));
+    }
+
+    @Test
+    @DisplayName("Test SQL date - date conversion (source is assignable to target type)")
+    void testSqlDateToSqlDate() {
+        final Date expectedDate = new Date(119, Calendar.JULY, 29);
+        final java.sql.Date sqlDate = new java.sql.Date(119, Calendar.JULY, 29);
+        log.debug("SQL date value: {}", sqlDate);
+        final Date date = coercer.coerce(sqlDate, Date.class);
+        log.debug(" - date: {}", date);
+        assertThat(date, equalTo(expectedDate));
+        assertThat(coercer.coerce(date, java.sql.Date.class), equalTo(sqlDate));
+    }
+
+    @Test
+    @DisplayName("Test SQL date - date conversion (source is not assignable to target type)")
+    void testDateToSqlDate() {
+        final java.sql.Date expectedDate = new java.sql.Date(119, Calendar.JULY, 29);
+        final Date date = new Date(119, Calendar.JULY, 29);
+        log.debug("Date value: {}", date);
+        final java.sql.Date sqlDate = coercer.coerce(date, java.sql.Date.class);
+        log.debug(" - SQL date: {}", sqlDate);
+        assertThat(sqlDate, equalTo(expectedDate));
+        assertThat(coercer.coerce(sqlDate, Date.class), equalTo(date));
     }
 }

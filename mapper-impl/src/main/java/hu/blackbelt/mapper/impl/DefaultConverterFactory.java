@@ -34,6 +34,7 @@ import hu.blackbelt.mapper.impl.temporal.OffsetDateTimeToTimestampConverter;
 import hu.blackbelt.mapper.impl.temporal.StringToCalendarConverter;
 import hu.blackbelt.mapper.impl.temporal.StringToDateConverter;
 import hu.blackbelt.mapper.impl.temporal.StringToLocalDateConverter;
+import hu.blackbelt.mapper.impl.temporal.StringToLocalDateTimeConverter;
 import hu.blackbelt.mapper.impl.temporal.StringToOffsetDateTimeConverter;
 import hu.blackbelt.mapper.impl.temporal.StringToSqlDateConverter;
 import hu.blackbelt.mapper.impl.temporal.StringToTimestampConverter;
@@ -79,6 +80,7 @@ public class DefaultConverterFactory extends AbstractConverterFactory {
     private final static Converter<String, Float> STRING_TO_FLOAT = new StringToFloatConverter();
     private final static Converter<String, Integer> STRING_TO_INTEGER = new StringToIntegerConverter();
     private final static StringToLocalDateConverter STRING_TO_LOCAL_DATE = new StringToLocalDateConverter();
+    private final static StringToLocalDateTimeConverter STRING_TO_LOCAL_DATE_TIME = new StringToLocalDateTimeConverter();
     private final static Converter<String, Long> STRING_TO_LONG = new StringToLongConverter();
     private final static StringToOffsetDateTimeConverter STRING_TO_OFFSET_DATETIME = new StringToOffsetDateTimeConverter();
     private final static StringToSqlDateConverter STRING_TO_SQL_DATE = new StringToSqlDateConverter();
@@ -102,13 +104,15 @@ public class DefaultConverterFactory extends AbstractConverterFactory {
     private final static TimestampFormatter TIMESTAMP_FORMATTER = new TimestampFormatter();
     private final static ZonedDateTimeFormatter ZONED_DATETIME_FORMATTER = new ZonedDateTimeFormatter();
 
-    private final static Collection<Converter> CONVERTERS = Arrays.asList(CALENDAR_TO_STRING, DATE_TO_LONG, DATE_TO_STRING,
-            LOCAL_DATE_TO_STRING, LOCAL_DATE_TIME_TO_STRING, LOCAL_DATETIME_TO_TIMESTAMP, NUMBER_TO_DATE, OFFSET_DATETIME_TO_STRING,
-            OFFSET_DATETIME_TO_TIMESTAMP, SQL_DATE_TO_STRING, STRING_TO_BOOLEAN, STRING_TO_BIGDECIMAL, STRING_TO_BIGINTEGER,
-            STRING_TO_CALENDAR, STRING_TO_CHARACTER, STRING_TO_BYTE, STRING_TO_DATE, STRING_TO_DOUBLE, STRING_TO_FLOAT, STRING_TO_INTEGER,
-            STRING_TO_LOCAL_DATE, STRING_TO_LONG, STRING_TO_OFFSET_DATETIME, STRING_TO_SQL_DATE, STRING_TO_SHORT, STRING_TO_TIMESTAMP,
-            STRING_TO_UUID, STRING_TO_ZONED_DATETIME, TIMESTAMP_TO_LOCAL_DATETIME, TIMESTAMP_TO_OFFSET_DATETIME, TIMESTAMP_TO_STRING,
-            TIMESTAMP_TO_ZONED_DATETIME, ZONED_DATETIME_TO_STRING, ZONED_DATETIME_TO_TIMESTAMP);
+    private final static Collection<Converter> CONVERTERS = Arrays.asList(CALENDAR_TO_STRING, DATE_TO_LONG,
+            DATE_TO_STRING, LOCAL_DATE_TO_STRING, LOCAL_DATE_TIME_TO_STRING, LOCAL_DATETIME_TO_TIMESTAMP,
+            NUMBER_TO_DATE, OFFSET_DATETIME_TO_STRING, OFFSET_DATETIME_TO_TIMESTAMP, SQL_DATE_TO_STRING,
+            STRING_TO_BOOLEAN, STRING_TO_BIGDECIMAL, STRING_TO_BIGINTEGER, STRING_TO_CALENDAR, STRING_TO_CHARACTER,
+            STRING_TO_BYTE, STRING_TO_DATE, STRING_TO_DOUBLE, STRING_TO_FLOAT, STRING_TO_INTEGER, STRING_TO_LOCAL_DATE,
+            STRING_TO_LOCAL_DATE_TIME, STRING_TO_LONG, STRING_TO_OFFSET_DATETIME, STRING_TO_SQL_DATE, STRING_TO_SHORT,
+            STRING_TO_TIMESTAMP, STRING_TO_UUID, STRING_TO_ZONED_DATETIME, TIMESTAMP_TO_LOCAL_DATETIME,
+            TIMESTAMP_TO_OFFSET_DATETIME, TIMESTAMP_TO_STRING, TIMESTAMP_TO_ZONED_DATETIME, ZONED_DATETIME_TO_STRING,
+            ZONED_DATETIME_TO_TIMESTAMP);
 
     public DefaultConverterFactory() {
         CALENDAR_TO_STRING.setFormatter(CALENDAR_FORMATTER);
@@ -120,6 +124,7 @@ public class DefaultConverterFactory extends AbstractConverterFactory {
         STRING_TO_CALENDAR.setFormatter(CALENDAR_FORMATTER);
         STRING_TO_DATE.setFormatter(DATE_FORMATTER);
         STRING_TO_LOCAL_DATE.setFormatter(LOCAL_DATE_FORMATTER);
+        STRING_TO_LOCAL_DATE_TIME.setFormatter(LOCAL_DATETIME_FORMATTER);
         STRING_TO_OFFSET_DATETIME.setFormatter(OFFSET_DATETIME_FORMATTER);
         STRING_TO_SQL_DATE.setFormatter(SQL_DATE_FORMATTER);
         STRING_TO_TIMESTAMP.setFormatter(TIMESTAMP_FORMATTER);
