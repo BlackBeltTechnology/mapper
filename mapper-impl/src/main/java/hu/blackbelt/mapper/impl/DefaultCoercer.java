@@ -4,17 +4,42 @@ import hu.blackbelt.mapper.api.Converter;
 import hu.blackbelt.mapper.api.ConverterFactory;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Default coercer implementation.
+ *
+ * Result is:
+ * - <code>null</code> if source value is also <code>null</code>,
+ * - the source object itself if target is matching to (specified by string) or assignable from (specified by class) source object class,
+ * - produced by single converter that type of source object is matching to source type of the converter,
+ * - produced by <i>any</i> converter that source object is assignable to source type of the converter,
+ * - produced by two converters, the first converts source object to String and the second converts String to target type.
+ *
+ * Coercers use autoboxing converters for primitive targets and an error log is produced if target type is primitive
+ * but converted value is null.
+ */
 @lombok.Getter
 @lombok.Setter
 @Slf4j
 public class DefaultCoercer extends AbstractCoercer {
 
     private final ConverterFactory converterFactory = new DefaultConverterFactory();
+
+    private final static Map<Class, Class> PRIMITIVES = new HashMap<>();
+
+    {
+        PRIMITIVES.put(byte.class, Byte.class);
+        PRIMITIVES.put(short.class, Short.class);
+        PRIMITIVES.put(int.class, Integer.class);
+        PRIMITIVES.put(long.class, Long.class);
+        PRIMITIVES.put(float.class, Float.class);
+        PRIMITIVES.put(double.class, Double.class);
+        PRIMITIVES.put(char.class, Character.class);
+        PRIMITIVES.put(boolean.class, Boolean.class);
+        PRIMITIVES.put(void.class, Void.class);
+    }
 
     @Override
     public <S, T> T coerce(final S sourceValue, final Class<T> targetClass) {
@@ -42,10 +67,29 @@ public class DefaultCoercer extends AbstractCoercer {
                 result = converter.apply(sourceValue);
             } else if (String.class == resolvedTargetClass) {
                 result = (T) sourceValue.toString();
+//            } else if (external_framework_found_supporting_direct_mapping) {
+//                // TODO: try to use external framework (ie. Jackson) to continue
             } else {
-                // TODO: check if source -> string -> target converters exists
-                // TODO: use external framework (ie. Jackson) to convert to to string and string to target type
-                throw new UnsupportedOperationException("Not supported yet");
+                // try to convert value to String and the result to the expected type
+                final Optional<String> str = converterFactory.getConverters(sourceClass, String.class).stream().findAny()
+                        .map(c -> (String)c.apply(sourceValue));
+                if (str.isPresent()) {
+                    final Optional<T> converted = converterFactory.getConverters(String.class, targetClass).stream().findAny()
+                            .map(c -> (T)c.apply(str));
+                    if (converted.isPresent()) {
+                        result = converted.get();
+                    } else {
+                        // no String -> target type converter found
+                        // TODO: try to use external framework (ie. Jackson) to continue
+
+                        throw new UnsupportedOperationException("Not supported yet");
+                    }
+                } else {
+                    // no source -> String converter found
+                    // TODO: try to use external framework (ie. Jackson) to continue
+
+                    throw new UnsupportedOperationException("Not supported yet");
+                }
             }
         }
 
@@ -54,7 +98,7 @@ public class DefaultCoercer extends AbstractCoercer {
         }
 
         if (log.isTraceEnabled()) {
-            log.trace("Converted <{}> [{}] to <{}> [{}]", new Object[] {sourceValue, sourceValue != null ? sourceValue.getClass().getName() : "-", result, result != null ? result.getClass().getName() : "-"});
+            log.trace("Converted <{}> [{}] to <{}> [{}]", new Object[]{sourceValue, sourceValue != null ? sourceValue.getClass().getName() : "-", result, result != null ? result.getClass().getName() : "-"});
         }
 
         return result;
@@ -64,20 +108,10 @@ public class DefaultCoercer extends AbstractCoercer {
     public <S, T> T coerce(final S sourceValue, final String targetClassName) {
         Objects.requireNonNull(targetClassName, "Target class must bet set");
 
-        final String resolvedTargetClassName;
-        switch (targetClassName) {
-            case "byte": resolvedTargetClassName = Byte.class.getName(); break;
-            case "short": resolvedTargetClassName = Short.class.getName(); break;
-            case "int": resolvedTargetClassName = Integer.class.getName(); break;
-            case "long": resolvedTargetClassName = Long.class.getName(); break;
-            case "float": resolvedTargetClassName = Float.class.getName(); break;
-            case "double": resolvedTargetClassName = Double.class.getName(); break;
-            case "char": resolvedTargetClassName = Character.class.getName(); break;
-            case "boolean": resolvedTargetClassName = Boolean.class.getName(); break;
-            case "void": resolvedTargetClassName = Void.class.getName(); break;
-            default:
-                resolvedTargetClassName = targetClassName;
-        }
+        final String resolvedTargetClassName = PRIMITIVES.entrySet().stream()
+                .filter(e -> e.getKey().getName().equals(targetClassName))
+                .map(e -> e.getValue().getName())
+                .findAny().orElse(targetClassName);
 
         final T result;
         if (sourceValue == null || "Void".equals(resolvedTargetClassName)) {
@@ -97,47 +131,52 @@ public class DefaultCoercer extends AbstractCoercer {
             } else if (!converters.isEmpty()) {
                 final Converter<S, T> converter = (Converter<S, T>) converters.iterator().next();
                 result = converter.apply(sourceValue);
-            } else if (resolvedTargetClassName.equals("java.lang.String")) {
+            } else if (resolvedTargetClassName.equals(String.class.getName())) {
                 result = (T) sourceValue.toString();
+//            } else if (external_framework_found_supporting_direct_mapping) {
+//                // TODO: try to use external framework (ie. Jackson) to continue
             } else {
-                // TODO: check if source -> string -> target converters exists
-                // TODO: use external framework (ie. Jackson) to convert to to string and string to target type
-                throw new UnsupportedOperationException("Not supported yet");
+                // try to convert value to String and the result to the expected type
+                final Optional<String> str = converterFactory.getConverters(sourceClass, String.class).stream().findAny()
+                        .map(c -> (String)c.apply(sourceValue));
+                if (str.isPresent()) {
+                    final Optional<T> converted = converterFactory.getConvertersFrom(String.class).stream()
+                            .filter(c -> resolvedTargetClassName.equals(c.getTargetType().getName())).findAny()
+                            .map(c -> (T)c.apply(str));
+                    if (converted.isPresent()) {
+                        result = converted.get();
+                    } else {
+                        // no String -> target type converter found
+                        // TODO: try to use external framework (ie. Jackson) to continue
+
+                        throw new UnsupportedOperationException("Not supported yet");
+                    }
+                } else {
+                    // no source -> String converter found
+                    // TODO: try to use external framework (ie. Jackson) to continue
+
+                    throw new UnsupportedOperationException("Not supported yet");
+                }
             }
         }
 
-        if (!resolvedTargetClassName.equals(targetClassName) && !targetClassName.equals("java.lang.Void") && result == null) {
+        if (!resolvedTargetClassName.equals(targetClassName) && !targetClassName.equals(Void.class.getName()) && result == null) {
             log.error("Non-null ({}) target value expected", targetClassName);
         }
 
         if (log.isTraceEnabled()) {
-            log.trace("Converted <{}> [{}] to <{}> [{}]", new Object[] {sourceValue, sourceValue != null ? sourceValue.getClass().getName() : "-", result, result != null ? result.getClass().getName() : "-"});
+            log.trace("Converted <{}> [{}] to <{}> [{}]", new Object[]{sourceValue, sourceValue != null ? sourceValue.getClass().getName() : "-", result, result != null ? result.getClass().getName() : "-"});
         }
 
         return result;
     }
 
     private static <T> Class getAutoBoxingClass(final Class<T> primitiveClass) {
-        if (primitiveClass == byte.class) {
-            return Byte.class;
-        } else if (primitiveClass == short.class) {
-            return Short.class;
-        } else if (primitiveClass == int.class) {
-            return Integer.class;
-        } else if (primitiveClass == long.class) {
-            return Long.class;
-        } else if (primitiveClass == float.class) {
-            return Float.class;
-        } else if (primitiveClass == double.class) {
-            return Double.class;
-        } else if (primitiveClass == char.class) {
-            return Character.class;
-        } else if (primitiveClass == boolean.class) {
-            return Boolean.class;
-        } else if (primitiveClass == void.class) {
-            return Void.class;
+        final Class c = PRIMITIVES.get(primitiveClass);
+        if (c == null) {
+            throw new UnsupportedOperationException("Unsupported primitive type: {}" + primitiveClass.getName());
         } else {
-            throw new UnsupportedOperationException("Unsupported primitive type");
+            return c;
         }
     }
 }

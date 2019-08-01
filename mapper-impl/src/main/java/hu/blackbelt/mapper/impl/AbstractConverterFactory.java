@@ -11,6 +11,10 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+/**
+ * Abstract converter factory that provides list of converters from and/or to given types. Runtime changes are
+ * supported by {@link ConverterRegistry} interface.
+ */
 @Slf4j
 public abstract class AbstractConverterFactory implements ConverterFactory, ConverterRegistry {
 
@@ -82,12 +86,15 @@ public abstract class AbstractConverterFactory implements ConverterFactory, Conv
     }
 
     /**
-     * Register default converters.
+     * Get list of default converters.
      */
     protected Collection<Converter> getDefaultConverters() {
         return Collections.emptyList();
     }
 
+    /**
+     * Key used to find converters.
+     */
     @lombok.Data
     @RequiredArgsConstructor
     private static class Key {

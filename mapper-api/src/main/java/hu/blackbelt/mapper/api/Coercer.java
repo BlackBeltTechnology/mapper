@@ -1,7 +1,7 @@
 package hu.blackbelt.mapper.api;
 
 /**
- * Makes use of Coercions to convert between an input value (of some specific type) and a desired output type.
+ * Makes use of {@link Converter}s to convert between an input value (of some specific type) and a desired output type.
  */
 public interface Coercer {
 
