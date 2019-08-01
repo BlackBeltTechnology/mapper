@@ -75,13 +75,13 @@
         <checkstyle-version>8.22</checkstyle-version>
         <checkstyle-plugin-version>3.1.0</checkstyle-plugin-version>
         <checkstyle-skip>false</checkstyle-skip>
-        <pmd-version>6.16.0</pmd-version>
+        <pmd-version>6.17.0</pmd-version>
         <pmd-plugin-version>3.12.0</pmd-plugin-version>
         <findbugs-version>3.0.1</findbugs-version>
         <findbugs-plugin-version>3.0.5</findbugs-plugin-version>
         <findbugs-annotations-version>3.0.1</findbugs-annotations-version>
-        <checkstyle-skip>true</checkstyle-skip>
-        <pmd-skip>true</pmd-skip>
+        <checkstyle-skip>false</checkstyle-skip>
+        <pmd-skip>false</pmd-skip>
         <findbugs-skip>false</findbugs-skip>
         <qa-failOnError>true</qa-failOnError>
 
@@ -523,6 +523,8 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
                         <configuration>
+                            <configLocation>google_checks.xml</configLocation>
+
                             <skip>${checkstyle-skip}</skip>
                             <!--configLocation>${checkstyle.configLocation}</configLocation-->
                             <failOnViolation>${qa-failOnError}</failOnViolation>
@@ -543,7 +545,7 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-pmd-plugin</artifactId>
                         <configuration>
-                            <rulesets>
+                            <!--rulesets>
                                 <ruleset>/rulesets/java/basic.xml</ruleset>
                                 <ruleset>/rulesets/java/braces.xml</ruleset>
                                 <ruleset>/rulesets/java/clone.xml</ruleset>
@@ -558,7 +560,7 @@
                                 <ruleset>/rulesets/java/sunsecure.xml</ruleset>
                                 <ruleset>/rulesets/java/unnecessary.xml</ruleset>
                                 <ruleset>/rulesets/java/unusedcode.xml</ruleset>
-                            </rulesets>
+                            </rulesets-->
                             <skip>${pmd-skip}</skip>
                             <skipEmptyReport>false</skipEmptyReport>
                             <failOnViolation>${qa-failOnError}</failOnViolation>

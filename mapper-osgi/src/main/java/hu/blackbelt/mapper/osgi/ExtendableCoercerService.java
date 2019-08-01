@@ -11,6 +11,9 @@ import org.osgi.service.component.annotations.*;
 import java.util.Collection;
 import java.util.LinkedList;
 
+/**
+ * Extendable OSGi coercer service. Support registering/unregistering {@link Converter}s.
+ */
 @Component(immediate = true, configurationPolicy = ConfigurationPolicy.REQUIRE, service = Coercer.class, reference = {
         @Reference(name = "converters", service = Converter.class, cardinality = ReferenceCardinality.MULTIPLE, bind = "registerConverter", updated = "updatedConverter", unbind = "unregisterConverter", policyOption = ReferencePolicyOption.GREEDY, policy = ReferencePolicy.DYNAMIC)
 })
@@ -25,7 +28,7 @@ public class ExtendableCoercerService extends DefaultCoercer {
     void start() {
         final ConverterFactory converterFactory = getConverterFactory();
         if (converterFactory instanceof ConverterRegistry) {
-            converterRegistry = ((ConverterRegistry) converterFactory);
+            converterRegistry = (ConverterRegistry) converterFactory;
         }
 
         if (converterRegistry != null) {

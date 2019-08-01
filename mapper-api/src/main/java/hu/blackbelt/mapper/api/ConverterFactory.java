@@ -5,7 +5,6 @@ import java.util.Collection;
 /**
  * Converter factory that provides converters.
  */
-@SuppressWarnings("checkstyle:sizes")
 public interface ConverterFactory {
 
     /**
