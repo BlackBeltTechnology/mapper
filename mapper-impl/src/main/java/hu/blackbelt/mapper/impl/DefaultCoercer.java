@@ -125,7 +125,7 @@ public class DefaultCoercer extends AbstractCoercer {
 //        // TODO: try to use external framework (ie. Jackson) to continue
         } else if (String.class == resolvedTargetClass) {
             return (T) sourceValue.toString();
-        } else {
+        } else if (!(sourceValue instanceof String)) {
             // try to convert value to String and the result to the expected type
             final String str = convertToString(sourceValue);
             final T converted = coerceUsingConverterByClass(str, resolvedTargetClass);
@@ -137,6 +137,8 @@ public class DefaultCoercer extends AbstractCoercer {
             } else {
                 throw new UnsupportedOperationException("No string parser found for the given type");
             }
+        } else {
+            throw new UnsupportedOperationException("Failed to convert " + sourceValue + " to " + (resolvedTargetClass != null ? resolvedTargetClass.getName() : "?"));
         }
     }
 

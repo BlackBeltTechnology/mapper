@@ -50,6 +50,7 @@ public class ExtendableCoercerService extends DefaultCoercer {
 
     void registerConverter(final Converter converter) {
         log.debug("Registered additional converter: {} -> {}", converter.getSourceType().getName(), converter.getTargetType().getName());
+        additionalConverters.add(converter);
     }
 
     void updatedConverter(final Converter converter) {
@@ -59,5 +60,6 @@ public class ExtendableCoercerService extends DefaultCoercer {
 
     void unregisterConverter(final Converter converter) {
         log.debug("Unregistered additional converter: {} -> {}", converter.getSourceType().getName(), converter.getTargetType().getName());
+        additionalConverters.remove(converter);
     }
 }
