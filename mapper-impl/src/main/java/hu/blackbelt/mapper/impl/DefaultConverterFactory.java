@@ -1,146 +1,93 @@
 package hu.blackbelt.mapper.impl;
 
 import hu.blackbelt.mapper.api.Converter;
-import hu.blackbelt.mapper.impl.formatters.CalendarFormatter;
-import hu.blackbelt.mapper.impl.formatters.DateFormatter;
-import hu.blackbelt.mapper.impl.formatters.LocalDateFormatter;
-import hu.blackbelt.mapper.impl.formatters.LocalDateTimeFormatter;
-import hu.blackbelt.mapper.impl.formatters.OffsetDateTimeFormatter;
-import hu.blackbelt.mapper.impl.formatters.SqlDateFormatter;
-import hu.blackbelt.mapper.impl.formatters.TimestampFormatter;
-import hu.blackbelt.mapper.impl.formatters.ZonedDateTimeFormatter;
-import hu.blackbelt.mapper.impl.logical.StringToBooleanConverter;
-import hu.blackbelt.mapper.impl.numeric.DateToLongConverter;
-import hu.blackbelt.mapper.impl.numeric.StringToBigDecimalConverter;
-import hu.blackbelt.mapper.impl.numeric.StringToBigIntegerConverter;
-import hu.blackbelt.mapper.impl.numeric.StringToByteConverter;
-import hu.blackbelt.mapper.impl.numeric.StringToCharacterConverter;
-import hu.blackbelt.mapper.impl.numeric.StringToDoubleConverter;
-import hu.blackbelt.mapper.impl.numeric.StringToFloatConverter;
-import hu.blackbelt.mapper.impl.numeric.StringToIntegerConverter;
-import hu.blackbelt.mapper.impl.numeric.StringToLongConverter;
-import hu.blackbelt.mapper.impl.numeric.StringToShortConverter;
-import hu.blackbelt.mapper.impl.string.CalendarToStringConverter;
-import hu.blackbelt.mapper.impl.string.DateToStringConverter;
-import hu.blackbelt.mapper.impl.string.LocalDateTimeToStringConverter;
-import hu.blackbelt.mapper.impl.string.LocalDateToStringConverter;
-import hu.blackbelt.mapper.impl.string.OffsetDateTimeToStringConverter;
-import hu.blackbelt.mapper.impl.string.SqlDateToStringConverter;
-import hu.blackbelt.mapper.impl.string.TimestampToStringConverter;
-import hu.blackbelt.mapper.impl.string.ZonedDateTimeToStringConverter;
-import hu.blackbelt.mapper.impl.temporal.LocalDateTimeToTimestampConverter;
-import hu.blackbelt.mapper.impl.temporal.NumberToDateConverter;
-import hu.blackbelt.mapper.impl.temporal.OffsetDateTimeToTimestampConverter;
-import hu.blackbelt.mapper.impl.temporal.StringToCalendarConverter;
-import hu.blackbelt.mapper.impl.temporal.StringToDateConverter;
-import hu.blackbelt.mapper.impl.temporal.StringToLocalDateConverter;
-import hu.blackbelt.mapper.impl.temporal.StringToLocalDateTimeConverter;
-import hu.blackbelt.mapper.impl.temporal.StringToOffsetDateTimeConverter;
-import hu.blackbelt.mapper.impl.temporal.StringToSqlDateConverter;
-import hu.blackbelt.mapper.impl.temporal.StringToTimestampConverter;
-import hu.blackbelt.mapper.impl.temporal.StringToZonedDateTimeConverter;
-import hu.blackbelt.mapper.impl.temporal.TimestampToLocalDateTimeConverter;
-import hu.blackbelt.mapper.impl.temporal.TimestampToOffsetDateTimeConverter;
-import hu.blackbelt.mapper.impl.temporal.TimestampToZonedDateTimeConverter;
-import hu.blackbelt.mapper.impl.temporal.ZonedDateTimeToTimestampConverter;
-import hu.blackbelt.mapper.impl.uuid.StringToUuidConverter;
+import hu.blackbelt.mapper.api.ConverterFactory;
+import hu.blackbelt.mapper.api.ConverterRegistry;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
- * Converter factory providing default converters:
- * - Boolean,
- * - Integer, Long, BigInteger, Float, Double, BigDecimal, Short, Byte,
- * - String, Character,
- * - Date, LocalDate, OffsetDateTime, ZonedDateTime, SqlDate, Timestamp, Calendar,
- * - enumerations (?)
+ * Default converter factory that provides list of converters from and/or to given types. Runtime changes are
+ * supported by {@link ConverterRegistry} interface.
  */
-public class DefaultConverterFactory extends AbstractConverterFactory {
+@Slf4j
+public class DefaultConverterFactory implements ConverterFactory, ConverterRegistry {
 
-    private final static CalendarToStringConverter CALENDAR_TO_STRING = new CalendarToStringConverter();
-    private final static Converter<Date, Long> DATE_TO_LONG = new DateToLongConverter();
-    final static DateToStringConverter DATE_TO_STRING = new DateToStringConverter();
-    private final static LocalDateToStringConverter LOCAL_DATE_TO_STRING = new LocalDateToStringConverter();
-    private final static LocalDateTimeToStringConverter LOCAL_DATE_TIME_TO_STRING = new LocalDateTimeToStringConverter();
-    private final static LocalDateTimeToTimestampConverter LOCAL_DATETIME_TO_TIMESTAMP = new LocalDateTimeToTimestampConverter();
-    private final static Converter<Number, Date> NUMBER_TO_DATE = new NumberToDateConverter();
-    private final static OffsetDateTimeToStringConverter OFFSET_DATETIME_TO_STRING = new OffsetDateTimeToStringConverter();
-    private final static OffsetDateTimeToTimestampConverter OFFSET_DATETIME_TO_TIMESTAMP = new OffsetDateTimeToTimestampConverter();
-    private final static SqlDateToStringConverter SQL_DATE_TO_STRING = new SqlDateToStringConverter();
-    private final static Converter<String, Boolean> STRING_TO_BOOLEAN = new StringToBooleanConverter();
-    private final static Converter<String, BigDecimal> STRING_TO_BIGDECIMAL = new StringToBigDecimalConverter();
-    private final static Converter<String, BigInteger> STRING_TO_BIGINTEGER = new StringToBigIntegerConverter();
-    private final static Converter<String, Character> STRING_TO_CHARACTER = new StringToCharacterConverter();
-    private final static Converter<String, Byte> STRING_TO_BYTE = new StringToByteConverter();
-    final static StringToDateConverter STRING_TO_DATE = new StringToDateConverter();
-    private final static Converter<String, Double> STRING_TO_DOUBLE = new StringToDoubleConverter();
-    private final static StringToCalendarConverter STRING_TO_CALENDAR = new StringToCalendarConverter();
-    private final static Converter<String, Float> STRING_TO_FLOAT = new StringToFloatConverter();
-    private final static Converter<String, Integer> STRING_TO_INTEGER = new StringToIntegerConverter();
-    private final static StringToLocalDateConverter STRING_TO_LOCAL_DATE = new StringToLocalDateConverter();
-    private final static StringToLocalDateTimeConverter STRING_TO_LOCAL_DATE_TIME = new StringToLocalDateTimeConverter();
-    private final static Converter<String, Long> STRING_TO_LONG = new StringToLongConverter();
-    private final static StringToOffsetDateTimeConverter STRING_TO_OFFSET_DATETIME = new StringToOffsetDateTimeConverter();
-    private final static StringToSqlDateConverter STRING_TO_SQL_DATE = new StringToSqlDateConverter();
-    private final static Converter<String, Short> STRING_TO_SHORT = new StringToShortConverter();
-    private final static StringToTimestampConverter STRING_TO_TIMESTAMP = new StringToTimestampConverter();
-    private final static Converter<String, UUID> STRING_TO_UUID = new StringToUuidConverter();
-    private final static StringToZonedDateTimeConverter STRING_TO_ZONED_DATETIME = new StringToZonedDateTimeConverter();
-    private final static TimestampToLocalDateTimeConverter TIMESTAMP_TO_LOCAL_DATETIME = new TimestampToLocalDateTimeConverter();
-    private final static TimestampToOffsetDateTimeConverter TIMESTAMP_TO_OFFSET_DATETIME = new TimestampToOffsetDateTimeConverter();
-    private final static TimestampToStringConverter TIMESTAMP_TO_STRING = new TimestampToStringConverter();
-    private final static TimestampToZonedDateTimeConverter TIMESTAMP_TO_ZONED_DATETIME = new TimestampToZonedDateTimeConverter();
-    private final static ZonedDateTimeToStringConverter ZONED_DATETIME_TO_STRING = new ZonedDateTimeToStringConverter();
-    private final static ZonedDateTimeToTimestampConverter ZONED_DATETIME_TO_TIMESTAMP = new ZonedDateTimeToTimestampConverter();
+    private final Map<Key, Collection<Converter>> converters = new ConcurrentHashMap<>();
 
-    private final static CalendarFormatter CALENDAR_FORMATTER = new CalendarFormatter();
-    private final static DateFormatter DATE_FORMATTER = new DateFormatter();
-    private final static LocalDateFormatter LOCAL_DATE_FORMATTER = new LocalDateFormatter();
-    private final static LocalDateTimeFormatter LOCAL_DATETIME_FORMATTER = new LocalDateTimeFormatter();
-    private final static OffsetDateTimeFormatter OFFSET_DATETIME_FORMATTER = new OffsetDateTimeFormatter();
-    private final static SqlDateFormatter SQL_DATE_FORMATTER = new SqlDateFormatter();
-    private final static TimestampFormatter TIMESTAMP_FORMATTER = new TimestampFormatter();
-    private final static ZonedDateTimeFormatter ZONED_DATETIME_FORMATTER = new ZonedDateTimeFormatter();
-
-    private final static Collection<Converter> CONVERTERS = Arrays.asList(CALENDAR_TO_STRING, DATE_TO_LONG,
-            DATE_TO_STRING, LOCAL_DATE_TO_STRING, LOCAL_DATE_TIME_TO_STRING, LOCAL_DATETIME_TO_TIMESTAMP,
-            NUMBER_TO_DATE, OFFSET_DATETIME_TO_STRING, OFFSET_DATETIME_TO_TIMESTAMP, SQL_DATE_TO_STRING,
-            STRING_TO_BOOLEAN, STRING_TO_BIGDECIMAL, STRING_TO_BIGINTEGER, STRING_TO_CALENDAR, STRING_TO_CHARACTER,
-            STRING_TO_BYTE, STRING_TO_DATE, STRING_TO_DOUBLE, STRING_TO_FLOAT, STRING_TO_INTEGER, STRING_TO_LOCAL_DATE,
-            STRING_TO_LOCAL_DATE_TIME, STRING_TO_LONG, STRING_TO_OFFSET_DATETIME, STRING_TO_SQL_DATE, STRING_TO_SHORT,
-            STRING_TO_TIMESTAMP, STRING_TO_UUID, STRING_TO_ZONED_DATETIME, TIMESTAMP_TO_LOCAL_DATETIME,
-            TIMESTAMP_TO_OFFSET_DATETIME, TIMESTAMP_TO_STRING, TIMESTAMP_TO_ZONED_DATETIME, ZONED_DATETIME_TO_STRING,
-            ZONED_DATETIME_TO_TIMESTAMP);
-
-    public DefaultConverterFactory() {
-        CALENDAR_TO_STRING.setFormatter(CALENDAR_FORMATTER);
-        DATE_TO_STRING.setFormatter(DATE_FORMATTER);
-        LOCAL_DATE_TO_STRING.setFormatter(LOCAL_DATE_FORMATTER);
-        LOCAL_DATE_TIME_TO_STRING.setFormatter(LOCAL_DATETIME_FORMATTER);
-        OFFSET_DATETIME_TO_STRING.setFormatter(OFFSET_DATETIME_FORMATTER);
-        SQL_DATE_TO_STRING.setFormatter(SQL_DATE_FORMATTER);
-        STRING_TO_CALENDAR.setFormatter(CALENDAR_FORMATTER);
-        STRING_TO_DATE.setFormatter(DATE_FORMATTER);
-        STRING_TO_LOCAL_DATE.setFormatter(LOCAL_DATE_FORMATTER);
-        STRING_TO_LOCAL_DATE_TIME.setFormatter(LOCAL_DATETIME_FORMATTER);
-        STRING_TO_OFFSET_DATETIME.setFormatter(OFFSET_DATETIME_FORMATTER);
-        STRING_TO_SQL_DATE.setFormatter(SQL_DATE_FORMATTER);
-        STRING_TO_TIMESTAMP.setFormatter(TIMESTAMP_FORMATTER);
-        STRING_TO_ZONED_DATETIME.setFormatter(ZONED_DATETIME_FORMATTER);
-        TIMESTAMP_TO_STRING.setFormatter(TIMESTAMP_FORMATTER);
-        ZONED_DATETIME_TO_STRING.setFormatter(ZONED_DATETIME_FORMATTER);
-
-        reset();
-    }
-
-    public void destroy() {
-        reset();
+    @Override
+    public <S> Collection<Converter> getConvertersFrom(final Class<S> sourceType) {
+        return converters.entrySet().stream()
+                .filter(e -> e.getKey().getSourceType() == sourceType)
+                .flatMap(e -> e.getValue().stream())
+                .collect(Collectors.toList());
     }
 
     @Override
-    protected Collection<Converter> getDefaultConverters() {
-        return CONVERTERS;
+    public <T> Collection<Converter> getConvertersTo(final Class<T> targetType) {
+        return converters.entrySet().stream()
+                .filter(e -> e.getKey().getTargetType() == targetType)
+                .flatMap(e -> e.getValue().stream())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public <T> Collection<Converter> getConvertersTo(final String targetTypeName) {
+        return converters.entrySet().stream()
+                .filter(e -> Objects.equals(e.getKey().getTargetType().getName(), targetTypeName))
+                .flatMap(e -> e.getValue().stream())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public <S, T> Collection<Converter> getConverters(final Class<S> sourceType, final Class<T> targetType) {
+        final Key key = new Key(sourceType, targetType);
+
+        return converters.containsKey(key) ? converters.get(key) : Collections.emptyList();
+    }
+
+    @Override
+    public <S, T> void registerConverter(final Converter<S, T> converter) {
+        final Key key = new Key(converter.getSourceType(), converter.getTargetType());
+
+        synchronized (this) {
+            if (converters.containsKey(key)) {
+                converters.get(key).add(converter);
+            } else {
+                final Set set = ConcurrentHashMap.newKeySet();
+                set.add(converter);
+                converters.put(key, set);
+            }
+        }
+    }
+
+    @Override
+    public <S, T> void unregisterConverter(final Converter<S, T> converter) {
+        final Key key = new Key(converter.getSourceType(), converter.getTargetType());
+
+        synchronized (this) {
+            if (converters.containsKey(key)) {
+                converters.get(key).remove(converter);
+            }
+        }
+    }
+
+    /**
+     * Key used to find converters.
+     */
+    @lombok.Data
+    @RequiredArgsConstructor
+    private static class Key {
+
+        @NonNull
+        private Class sourceType;
+
+        @NonNull
+        private Class targetType;
     }
 }

@@ -2,6 +2,7 @@ package hu.blackbelt.mapper.impl;
 
 import hu.blackbelt.mapper.api.ConverterException;
 import hu.blackbelt.mapper.api.Formatter;
+import hu.blackbelt.mapper.impl.formatters.DateFormatter;
 import hu.blackbelt.mapper.impl.formatters.DateWithTimeFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
@@ -31,7 +32,6 @@ public class DefaultCoercerTest {
 
     @AfterEach
     void tearDown() {
-        ((DefaultConverterFactory)(coercer).getConverterFactory()).destroy();
         coercer = null;
     }
 
@@ -119,6 +119,9 @@ public class DefaultCoercerTest {
     @Test
     @DisplayName("Test date - string conversion")
     void testDate() {
+        final Formatter<Date> dateWithoutTimeFormatter = new DateFormatter();
+        Java8Module.STRING_TO_DATE.setFormatter(dateWithoutTimeFormatter);
+        Java8Module.DATE_TO_STRING.setFormatter(dateWithoutTimeFormatter);
         final String str = "2019-07-29";
         final Date dateValue = new Date(119, Calendar.JULY, 29);
         log.debug("Date value: {}", dateValue);
@@ -132,9 +135,8 @@ public class DefaultCoercerTest {
     @DisplayName("Test date - string conversion (with time)")
     void testDateWithTime() {
         final Formatter<Date> dateWithTimeFormatter = new DateWithTimeFormatter();
-        ((DefaultConverterFactory) coercer.getConverterFactory()).STRING_TO_DATE.setFormatter(dateWithTimeFormatter);
-        ((DefaultConverterFactory) coercer.getConverterFactory()).DATE_TO_STRING.setFormatter(dateWithTimeFormatter);
-
+        Java8Module.STRING_TO_DATE.setFormatter(dateWithTimeFormatter);
+        Java8Module.DATE_TO_STRING.setFormatter(dateWithTimeFormatter);
         final String str = "2019-07-29T12:13:14.123";
         final int offsetSeconds = new Date().getTimezoneOffset() * 60;
         final Date dateValue = Date.from(LocalDateTime.of(2019, 7, 29, 12, 13, 14, 123000000).toInstant(ZoneOffset.ofTotalSeconds(-offsetSeconds)));

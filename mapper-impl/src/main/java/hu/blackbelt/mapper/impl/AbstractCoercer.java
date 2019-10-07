@@ -8,5 +8,5 @@ import hu.blackbelt.mapper.api.ConverterFactory;
  */
 public abstract class AbstractCoercer implements Coercer {
 
-    protected abstract ConverterFactory getConverterFactory();
+    public abstract ConverterFactory getConverterFactory();
 }

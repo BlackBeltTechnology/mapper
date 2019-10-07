@@ -24,12 +24,10 @@ import java.util.stream.Collectors;
  * Coercers use autoboxing converters for primitive targets and an error log is produced if target type is primitive
  * but converted value is null.
  */
-@lombok.Getter
-@lombok.Setter
 @Slf4j
 public class DefaultCoercer extends AbstractCoercer {
 
-    private final ConverterFactory converterFactory = new DefaultConverterFactory();
+    private static final ConverterFactory defaultConverterFactory = new Java8Module().getConverterFactory();
 
     /**
      * Map of primitive and their autoboxing types.
@@ -97,6 +95,10 @@ public class DefaultCoercer extends AbstractCoercer {
         }
 
         return result;
+    }
+
+    public ConverterFactory getConverterFactory() {
+        return defaultConverterFactory;
     }
 
     /**

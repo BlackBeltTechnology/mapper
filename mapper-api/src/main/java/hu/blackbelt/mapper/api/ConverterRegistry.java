@@ -22,9 +22,4 @@ public interface ConverterRegistry {
      * @param <T>       target type
      */
     <S, T> void unregisterConverter(Converter<S, T> converter);
-
-    /**
-     * Reset converter registry.
-     */
-    void reset();
 }

@@ -5,7 +5,7 @@ import java.util.Collection;
 /**
  * Converter factory that provides converters.
  */
-public interface ConverterFactory {
+public interface ConverterFactory extends ConverterRegistry {
 
     /**
      * Get all converters that convert any values from a given type.

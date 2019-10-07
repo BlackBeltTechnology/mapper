@@ -28,7 +28,7 @@ public class ExtendableCoercerService extends DefaultCoercer {
     void start() {
         final ConverterFactory converterFactory = getConverterFactory();
         if (converterFactory instanceof ConverterRegistry) {
-            converterRegistry = (ConverterRegistry) converterFactory;
+            converterRegistry = converterFactory;
         }
 
         if (converterRegistry != null) {
@@ -43,9 +43,7 @@ public class ExtendableCoercerService extends DefaultCoercer {
 
     @Deactivate
     void stop() {
-        if (converterRegistry != null) {
-            converterRegistry.reset();
-        }
+        // do nothing, no resource to cleanup
     }
 
     void registerConverter(final Converter converter) {
