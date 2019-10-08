@@ -28,6 +28,6 @@ public class ZonedDateTimeToTimestampConverter implements Converter<ZonedDateTim
         if (!Objects.equals(zonedDateTime.getZone(), targetZone)) {
             log.warn("Zoned date time converted to SQL timestamp, zone info lost");
         }
-        return new Timestamp(zonedDateTime.withZoneSameInstant(targetZone).toEpochSecond() * 1000L);
+        return new Timestamp(zonedDateTime.withZoneSameInstant(targetZone).toEpochSecond() * 1000L + zonedDateTime.getNano() / 1000000);
     }
 }

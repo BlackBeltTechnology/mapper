@@ -276,13 +276,13 @@ public class DefaultCoercerTest {
         log.debug("Original zoned datetime: {}", ts);
         log.debug("  - local (UTC) datetime: {}", localDateTime);
 
-        final Timestamp timestamp = new Timestamp(localDateTime.toEpochSecond(ZoneOffset.UTC) * 1000L); // create timestamp by epoch!
+        final Timestamp timestamp = new Timestamp(localDateTime.toEpochSecond(ZoneOffset.UTC) * 1000L + ts.getNano() % 1000000); // create timestamp by epoch!
         log.debug("  - timestamp value: {}", timestamp);
         final ZonedDateTime zonedDateTime = coercer.coerce(timestamp, ZonedDateTime.class);
         log.debug("  - zoned datetime: {}", zonedDateTime);
         final Timestamp timestamp2 = coercer.coerce(zonedDateTime, Timestamp.class);
         log.debug("  - new timestamp: {}", timestamp2);
-        assertThat(timestamp.getTime(), equalTo(timestamp2.getTime()));
+        assertThat(timestamp, equalTo(timestamp2));
     }
 
     @Test
