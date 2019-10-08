@@ -4,6 +4,7 @@ import hu.blackbelt.mapper.api.Coercer;
 import hu.blackbelt.mapper.api.Converter;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -28,6 +29,7 @@ import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.*;
 @Category(MapperTestSuite.class)
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
+@Ignore
 public class ExtendableCoerserServiceTest extends StandardKarafTest {
 
     public static final String MAPPER_OSGI = "mapper-osgi";
