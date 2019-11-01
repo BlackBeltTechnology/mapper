@@ -27,6 +27,7 @@ public class DefaultCoercerTest {
 
     @BeforeEach
     void setUp() {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         coercer = new DefaultCoercer();
     }
 
