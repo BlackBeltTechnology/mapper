@@ -27,7 +27,6 @@ public class DefaultCoercerTest {
 
     @BeforeEach
     void setUp() {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         coercer = new DefaultCoercer();
     }
 
@@ -139,8 +138,9 @@ public class DefaultCoercerTest {
         Java8Module.STRING_TO_DATE.setFormatter(dateWithTimeFormatter);
         Java8Module.DATE_TO_STRING.setFormatter(dateWithTimeFormatter);
         final String str = "2019-07-29T12:13:14.123";
-        final int offsetSeconds = new Date().getTimezoneOffset() * 60;
-        final Date dateValue = Date.from(LocalDateTime.of(2019, 7, 29, 12, 13, 14, 123000000).toInstant(ZoneOffset.ofTotalSeconds(-offsetSeconds)));
+        final LocalDateTime localDateTime = LocalDateTime.of(2019, 7, 29, 12, 13, 14, 123000000);
+        final ZoneOffset zoneOffset = ZoneId.systemDefault().getRules().getOffset(localDateTime);
+        final Date dateValue = Date.from(localDateTime.toInstant(zoneOffset));
         log.debug("Date value (with time): {}", dateValue);
         final String dateString = coercer.coerce(dateValue, String.class);
         log.debug(" - string: {}", dateString);
