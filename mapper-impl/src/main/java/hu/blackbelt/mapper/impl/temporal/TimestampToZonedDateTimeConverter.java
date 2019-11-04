@@ -4,6 +4,7 @@ import hu.blackbelt.mapper.api.Converter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Timestamp;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
@@ -29,8 +30,9 @@ public class TimestampToZonedDateTimeConverter implements Converter<Timestamp, Z
      */
     @Override
     public ZonedDateTime apply(final Timestamp timestamp) {
-        if (timestamp.getTimezoneOffset() != 0) {
-            log.warn("Timestamp converted to UTC, offset: {} min", timestamp.getTimezoneOffset());
+        ZoneOffset zoneOffset = ZoneId.systemDefault().getRules().getOffset(timestamp.toLocalDateTime());
+        if (zoneOffset.getTotalSeconds() > 0) {
+            log.warn("Timestamp converted to UTC, offset of original value: {} s", zoneOffset.getTotalSeconds());
         }
         return timestamp.toInstant().atZone(ZoneOffset.UTC);
     }
