@@ -170,6 +170,8 @@ public class DefaultCoercer extends AbstractCoercer {
 //                // TODO: try to use external framework (ie. Jackson) to continue
         } else if (resolvedTargetClassName.equals(String.class.getName())) {
             return (T) sourceValue.toString();
+        } else if (resolvedTargetClassName.equals(Object.class.getName())) {
+            return (T) sourceValue;
         } else {
             // try to convert value to String and the result to the expected type
             final String str = convertToString(sourceValue);
