@@ -6,5 +6,5 @@ package hu.blackbelt.mapper.api;
 public interface CoercerFactory {
 
     Coercer getCoercerInstance();
-    Coercer getExtendableCoercerInstance();
+    ExtendableCoercer getExtendableCoercerInstance();
 }

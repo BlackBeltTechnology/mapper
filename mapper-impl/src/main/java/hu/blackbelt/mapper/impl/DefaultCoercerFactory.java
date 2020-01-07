@@ -25,7 +25,7 @@ public class DefaultCoercerFactory implements CoercerFactory {
     }
 
     @Override
-    public Coercer getExtendableCoercerInstance() {
+    public ExtendableCoercer getExtendableCoercerInstance() {
         return new DefaultCoercer();
     }
 }
