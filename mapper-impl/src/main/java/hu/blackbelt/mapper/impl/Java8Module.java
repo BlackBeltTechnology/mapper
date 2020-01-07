@@ -2,6 +2,7 @@ package hu.blackbelt.mapper.impl;
 
 import hu.blackbelt.mapper.api.Converter;
 import hu.blackbelt.mapper.api.ConverterFactory;
+import hu.blackbelt.mapper.api.ExtendableCoercer;
 import hu.blackbelt.mapper.impl.formatters.CalendarFormatter;
 import hu.blackbelt.mapper.impl.formatters.DateFormatter;
 import hu.blackbelt.mapper.impl.formatters.LocalDateFormatter;
@@ -139,7 +140,7 @@ public class Java8Module {
         CONVERTERS.forEach(c -> converterFactory.registerConverter(c));
     }
     
-    public static AbstractCoercer decorateWithJava8(final AbstractCoercer coercer) {
+    public static ExtendableCoercer decorateWithJava8(final ExtendableCoercer coercer) {
         final Java8Module module = new Java8Module(coercer.getConverterFactory());
         return new DefaultCoercer() {
 

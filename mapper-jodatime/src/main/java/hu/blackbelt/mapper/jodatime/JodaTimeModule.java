@@ -2,7 +2,7 @@ package hu.blackbelt.mapper.jodatime;
 
 import hu.blackbelt.mapper.api.Converter;
 import hu.blackbelt.mapper.api.ConverterFactory;
-import hu.blackbelt.mapper.impl.AbstractCoercer;
+import hu.blackbelt.mapper.api.ExtendableCoercer;
 import hu.blackbelt.mapper.impl.DefaultCoercer;
 import hu.blackbelt.mapper.impl.DefaultConverterFactory;
 import hu.blackbelt.mapper.jodatime.formatters.LocalDateFormatter;
@@ -32,7 +32,7 @@ public class JodaTimeModule {
         STRING_TO_LOCAL_DATE.setFormatter(LOCAL_DATE_FORMATTER);CONVERTERS.forEach(c -> converterFactory.registerConverter(c));
     }
 
-    public static AbstractCoercer decorateWithJodaTime(final AbstractCoercer coercer) {
+    public static ExtendableCoercer decorateWithJodaTime(final ExtendableCoercer coercer) {
         final JodaTimeModule module = new JodaTimeModule(coercer.getConverterFactory());
         return new DefaultCoercer() {
 

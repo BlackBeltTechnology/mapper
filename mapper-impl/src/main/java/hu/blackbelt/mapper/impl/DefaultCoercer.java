@@ -2,6 +2,7 @@ package hu.blackbelt.mapper.impl;
 
 import hu.blackbelt.mapper.api.Converter;
 import hu.blackbelt.mapper.api.ConverterFactory;
+import hu.blackbelt.mapper.api.ExtendableCoercer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
  * but converted value is null.
  */
 @Slf4j
-public class DefaultCoercer extends AbstractCoercer {
+public class DefaultCoercer implements ExtendableCoercer {
 
     private static final ConverterFactory defaultConverterFactory = new Java8Module().getConverterFactory();
 
