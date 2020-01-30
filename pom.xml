@@ -634,7 +634,9 @@
                 <module>mapper-osgi</module>
                 <module>features</module>
                 <module>kar</module>
+                <!-- Temporatly removed
                 <module>mapper-itest</module>
+                -->
             </modules>
         </profile>
 
