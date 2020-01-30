@@ -52,7 +52,6 @@
                 <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
             </properties>
         </profile>
-<!--
         <profile>
             <id>ossrh</id>
             <activation>
@@ -70,6 +69,5 @@
                 </repository>
             </repositories>
         </profile>
--->
     </profiles>
 </settings>
