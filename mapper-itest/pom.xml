@@ -131,6 +131,7 @@
                     <systemPropertyVariables>
                         <pax.exam.karaf.version>${karaf-version}</pax.exam.karaf.version>
                         <pax.exam.service.timeout>30000</pax.exam.service.timeout>
+                        <org.ops4j.pax.url.mvn.localRepository>${settings.localRepository}</org.ops4j.pax.url.mvn.localRepository>
                     </systemPropertyVariables>
                 </configuration>
                 <executions>
