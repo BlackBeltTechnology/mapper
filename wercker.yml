@@ -131,7 +131,7 @@ release:
       goals: clean deploy
       profiles: ${RELEASE_PROFILES}
       settings: .maven.xml
-      maven_opts: -Dorg.ops4j.pax.url.mvn.settings=${WERCKER_ROOT}/.maven.xml -DuseCustomSettings=true
+#      maven_opts: -Dorg.ops4j.pax.url.mvn.settings=${WERCKER_ROOT}/.maven.xml -DuseCustomSettings=true
       cache_repo: true
 
     - wercker/maven:
