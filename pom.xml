@@ -762,6 +762,7 @@
                             <tag>${project.version}</tag>
                             <deleteRelease>true</deleteRelease>
                             <commitish>${env.WERCKER_GIT_COMMIT}</commitish>
+                            <!--
                             <fileSets>
                                 <fileSet>
                                     <directory>${basedir}/mapper-api/target</directory>
@@ -781,7 +782,7 @@
                                         <include>*.jar</include>
                                     </includes>
                                 </fileSet>
-                            </fileSets>
+                            </fileSets> -->
                         </configuration>
                         <executions>
                             <execution>
