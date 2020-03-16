@@ -19,7 +19,6 @@ public class OffsetDateTimeToTimestampConverter implements Converter<OffsetDateT
 
     @Override
     public Timestamp apply(final OffsetDateTime offsetDateTime) {
-        // TODO - log warning message if zone info is set
-        return Timestamp.valueOf(offsetDateTime.toLocalDateTime());
+        return Timestamp.from(offsetDateTime.toInstant());
     }
 }
