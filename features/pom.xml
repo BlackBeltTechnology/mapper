@@ -49,7 +49,7 @@
         <profile>
             <id>verify-feature</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <build>
                 <plugins>
@@ -83,8 +83,10 @@
                                         <feature>shell-compat</feature>
                                     </framework>
                                     <features>
-                                        <feature>judo-mapper-core</feature>
-                                        <feature>judo-mapper-jodatime</feature>
+                                        <feature>mapper-core</feature>
+                                        <feature>mapper-jodatime</feature>
+                                        <feature>mapper-osgi</feature>
+                                        <feature>joda-time</feature>
                                     </features>
                                 </configuration>
                             </execution>

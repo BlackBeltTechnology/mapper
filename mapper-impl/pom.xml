@@ -23,6 +23,12 @@
                         <Export-Package>
                             hu.blackbelt.mapper.impl;version=${project.version}
                         </Export-Package>
+                        <Import-Package>
+                          org.osgi.framework;version="[1.8,2.0)",
+                          !lombok,
+                          javax.annotation;version="[1.0,2)",
+                          *
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>
