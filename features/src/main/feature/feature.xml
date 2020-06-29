@@ -5,6 +5,7 @@
           xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.5.0 http://karaf.apache.org/xmlns/features/v1.5.0">
 
     <feature name="mapper-core" version="${project.version}" description="Mapper, Core">
+        <feature dependency="true">scr</feature>
         <bundle>mvn:${project.groupId}/mapper-api/${project.version}</bundle>
         <bundle>mvn:${project.groupId}/mapper-impl/${project.version}</bundle>
     </feature>
@@ -17,7 +18,6 @@
     </feature>
 
     <feature name="mapper-osgi" version="${project.version}" description="Mapper, OSGi services">
-        <feature dependency="true">scr</feature>
         <feature>mapper-core</feature>
         <bundle>mvn:${project.groupId}/mapper-osgi/${project.version}</bundle>
         <config name="hu.blackbelt.mapper.osgi.ExtendableCoercerService"></config>
