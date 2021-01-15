@@ -30,6 +30,7 @@ build:
       cache_repo: true
 
     - wercker/maven:
+      name: Clean deploy (with build profiles)
       goals: clean deploy
       profiles: ${BUILD_PROFILES}
       settings: .maven.xml
@@ -137,6 +138,7 @@ release:
 #      cache_repo: true
 
 # Set version and deploy with steps
+
     - wercker/maven:
       name: Set versions
       goals: versions:set
@@ -145,6 +147,7 @@ release:
       cache_repo: true
 
     - wercker/maven:
+      name: Clean deploy (with release profiles)
       goals: clean deploy
       profiles: ${RELEASE_PROFILES}
       settings: .maven.xml
@@ -219,6 +222,7 @@ release:
       name: Delete builder branch
       code: |-
              git branch -D wercker_$WERCKER_RUN_ID
+
 
     - script:
       name: Push everything
