@@ -6,8 +6,7 @@
     <parent>
         <groupId>hu.blackbelt.mapper</groupId>
         <artifactId>mapper-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../</relativePath>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>mapper-itest</artifactId>
