@@ -19,6 +19,6 @@ public class TimeToLocalTimeConverter implements Converter<Time, LocalTime> {
 
     @Override
     public LocalTime apply(final Time time) {
-        return LocalTime.ofNanoOfDay(time.getTime() * 1000 * 1000);
+        return time.toLocalTime();
     }
 }

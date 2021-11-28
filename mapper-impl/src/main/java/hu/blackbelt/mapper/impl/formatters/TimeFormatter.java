@@ -14,13 +14,14 @@ public class TimeFormatter implements Formatter<Time> {
 
     @Override
     public String convertValueToString(final Time value) {
-        return formatter.format(LocalTime.ofNanoOfDay(value.getTime() * 1000 * 1000));
+        return formatter.format(value.toLocalTime());
+
     }
 
     @Override
     public Time parseString(final String str) {
         try {
-            return new Time(LocalTime.from(formatter.parse(str)).toNanoOfDay() / (1000 * 1000));
+            return Time.valueOf(LocalTime.from(formatter.parse(str)));
         } catch (DateTimeParseException ex) {
             throw new ConverterException("Unable to parse string as LocalTime", ex);
         }
