@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class TimestampFormatter implements Formatter<Timestamp> {
+public class SqlTimestampFormatter implements Formatter<Timestamp> {
 
     private DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 

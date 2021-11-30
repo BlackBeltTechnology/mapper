@@ -3,13 +3,13 @@ package hu.blackbelt.mapper.impl.temporal;
 import hu.blackbelt.mapper.api.Converter;
 import hu.blackbelt.mapper.api.Formatter;
 
-import java.sql.Timestamp;
+import java.time.LocalTime;
 
-public class StringToTimestampConverter implements Converter<String, Timestamp> {
+public class StringToLocalTimeConverter implements Converter<String, LocalTime> {
 
-    private Formatter<Timestamp> formatter;
+    private Formatter<LocalTime> formatter;
 
-    public void setFormatter(final Formatter<Timestamp> formatter) {
+    public void setFormatter(final Formatter<LocalTime> formatter) {
         this.formatter = formatter;
     }
 
@@ -19,12 +19,12 @@ public class StringToTimestampConverter implements Converter<String, Timestamp> 
     }
 
     @Override
-    public Class<Timestamp> getTargetType() {
-        return Timestamp.class;
+    public Class<LocalTime> getTargetType() {
+        return LocalTime.class;
     }
 
     @Override
-    public Timestamp apply(final String s) {
+    public LocalTime apply(String s) {
         return formatter.parseString(s);
     }
 }
