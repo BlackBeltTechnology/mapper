@@ -5,7 +5,7 @@ import hu.blackbelt.mapper.api.Converter;
 import java.sql.Time;
 import java.time.LocalTime;
 
-public class LocalTimeToTimeConverter implements Converter<LocalTime, Time> {
+public class LocalTimeToSqlTimeConverter implements Converter<LocalTime, Time> {
 
     @Override
     public Class<LocalTime> getSourceType() {

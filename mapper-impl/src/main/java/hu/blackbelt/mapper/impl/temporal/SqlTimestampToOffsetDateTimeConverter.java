@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
-public class TimestampToOffsetDateTimeConverter implements Converter<Timestamp, OffsetDateTime> {
+public class SqlTimestampToOffsetDateTimeConverter implements Converter<Timestamp, OffsetDateTime> {
 
     @Override
     public Class<Timestamp> getSourceType() {

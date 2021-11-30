@@ -5,7 +5,7 @@ import hu.blackbelt.mapper.api.Formatter;
 
 import java.sql.Time;
 
-public class TimeToStringConverter implements Converter<Time, String> {
+public class SqlTimeToStringConverter implements Converter<Time, String> {
 
     private Formatter<Time> formatter;
 

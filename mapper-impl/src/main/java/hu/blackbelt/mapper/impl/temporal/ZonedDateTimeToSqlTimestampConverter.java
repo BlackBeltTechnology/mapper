@@ -10,7 +10,7 @@ import java.time.ZonedDateTime;
 import java.util.Objects;
 
 @Slf4j
-public class ZonedDateTimeToTimestampConverter implements Converter<ZonedDateTime, Timestamp> {
+public class ZonedDateTimeToSqlTimestampConverter implements Converter<ZonedDateTime, Timestamp> {
 
     @Override
     public Class<ZonedDateTime> getSourceType() {
