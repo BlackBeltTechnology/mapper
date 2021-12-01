@@ -36,12 +36,17 @@ public class Java8Module {
     final static LocalDateTimeToStringConverter LOCAL_DATE_TIME_TO_STRING = new LocalDateTimeToStringConverter();
     final static LocalDateTimeToLocalDateConverter LOCAL_DATE_TIME_TO_LOCAL_DATE = new LocalDateTimeToLocalDateConverter();
     final static LocalDateTimeToSqlTimestampConverter LOCAL_DATETIME_TO_TIMESTAMP = new LocalDateTimeToSqlTimestampConverter();
-    final static LocalTimeToSqlTimeConverter LOCAL_TIME_TO_TIMESTAMP = new LocalTimeToSqlTimeConverter();
+    final static LocalTimeToOffsetTimeConverter LOCAL_TIME_TO_OFFSET_TIME = new LocalTimeToOffsetTimeConverter();
+    final static LocalTimeToSqlTimeConverter LOCAL_TIME_TO_TIME = new LocalTimeToSqlTimeConverter();
+    final static LocalTimeToSqlTimestampConverter LOCAL_TIME_TO_TIMESTAMP = new LocalTimeToSqlTimestampConverter();
     final static Converter<Number, Date> NUMBER_TO_DATE = new NumberToDateConverter();
     final static OffsetDateTimeToStringConverter OFFSET_DATETIME_TO_STRING = new OffsetDateTimeToStringConverter();
     final static OffsetDateTimeToLocalDateConverter OFFSET_DATE_TIME_TO_LOCAL_DATE = new OffsetDateTimeToLocalDateConverter();
+    final static OffsetDateTimeToLocalDateTimeConverter OFFSET_DATE_TIME_TO_LOCAL_DATE_TIME = new OffsetDateTimeToLocalDateTimeConverter();
     final static OffsetDateTimeToSqlTimestampConverter OFFSET_DATETIME_TO_TIMESTAMP = new OffsetDateTimeToSqlTimestampConverter();
+    final static OffsetTimeToStringConverter OFFSET_TIME_TO_STRING = new OffsetTimeToStringConverter();
     final static OffsetTimeToLocalTimeConverter OFFSET_TIME_TO_LOCAL_TIME = new OffsetTimeToLocalTimeConverter();
+    final static OffsetTimeToSqlTimeConverter OFFSET_TIME_TO_SQL_TIME = new OffsetTimeToSqlTimeConverter();
     final static SqlDateToStringConverter SQL_DATE_TO_STRING = new SqlDateToStringConverter();
     final static Converter<String, Boolean> STRING_TO_BOOLEAN = new StringToBooleanConverter();
     final static Converter<String, BigDecimal> STRING_TO_BIGDECIMAL = new StringToBigDecimalConverter();
@@ -55,6 +60,7 @@ public class Java8Module {
     final static Converter<String, Integer> STRING_TO_INTEGER = new StringToIntegerConverter();
     final static StringToLocalDateConverter STRING_TO_LOCAL_DATE = new StringToLocalDateConverter();
     final static StringToLocalDateTimeConverter STRING_TO_LOCAL_DATE_TIME = new StringToLocalDateTimeConverter();
+    final static StringToOffsetTimeConverter STRING_TO_OFFSET_TIME = new StringToOffsetTimeConverter();
     final static StringToLocalTimeConverter STRING_TO_LOCAL_TIME = new StringToLocalTimeConverter();
     final static Converter<String, Long> STRING_TO_LONG = new StringToLongConverter();
     final static StringToOffsetDateTimeConverter STRING_TO_OFFSET_DATETIME = new StringToOffsetDateTimeConverter();
@@ -66,11 +72,13 @@ public class Java8Module {
     final static StringToZonedDateTimeConverter STRING_TO_ZONED_DATETIME = new StringToZonedDateTimeConverter();
     final static SqlTimestampToLocalDateTimeConverter SQL_TIMESTAMP_TO_LOCAL_DATETIME = new SqlTimestampToLocalDateTimeConverter();
     final static SqlTimestampToLocalDateConverter SQL_TIMESTAMP_TO_LOCAL_DATE = new SqlTimestampToLocalDateConverter();
+    final static SqlTimestampToLocalTimeConverter TIMESTAMP_TO_LOCAL_TIME = new SqlTimestampToLocalTimeConverter();
     final static SqlTimestampToOffsetDateTimeConverter SQL_TIMESTAMP_TO_OFFSET_DATETIME = new SqlTimestampToOffsetDateTimeConverter();
     final static SqlTimestampToStringConverter SQL_TIMESTAMP_TO_STRING = new SqlTimestampToStringConverter();
     final static SqlTimestampToZonedDateTimeConverter SQL_TIMESTAMP_TO_ZONED_DATETIME = new SqlTimestampToZonedDateTimeConverter();
     final static SqlTimeToStringConverter TIME_TO_STRING = new SqlTimeToStringConverter();
     final static SqlTimeToLocalTimeConverter TIME_TO_LOCAL_TIME = new SqlTimeToLocalTimeConverter();
+
     final static ZonedDateTimeToStringConverter ZONED_DATETIME_TO_STRING = new ZonedDateTimeToStringConverter();
     final static ZonedDateTimeToLocalDateConverter ZONED_DATE_TIME_TO_LOCAL_DATE = new ZonedDateTimeToLocalDateConverter();
     final static ZonedDateTimeToSqlTimestampConverter ZONED_DATETIME_TO_SQL_TIMESTAMP = new ZonedDateTimeToSqlTimestampConverter();
@@ -85,6 +93,7 @@ public class Java8Module {
     final static SqlTimestampFormatter TIMESTAMP_FORMATTER = new SqlTimestampFormatter();
     final static SqlTimeFormatter TIME_FORMATTER = new SqlTimeFormatter();
     final static ZonedDateTimeFormatter ZONED_DATETIME_FORMATTER = new ZonedDateTimeFormatter();
+    final static OffsetTimeFormatter OFFSET_TIME_FORMATTER = new OffsetTimeFormatter();
 
     final static Collection<Converter> CONVERTERS = Arrays.asList(CALENDAR_TO_STRING, DATE_TO_LONG,
             DATE_TO_STRING, LOCAL_DATE_TO_STRING, LOCAL_DATE_TIME_TO_STRING, LOCAL_DATETIME_TO_TIMESTAMP,
@@ -94,10 +103,11 @@ public class Java8Module {
             STRING_TO_LOCAL_DATE_TIME, STRING_TO_LONG, STRING_TO_OFFSET_DATETIME, STRING_TO_SQL_DATE, STRING_TO_SHORT,
             STRING_TO_SQL_TIMESTAMP, STRING_TO_UUID, STRING_TO_ZONED_DATETIME, SQL_TIMESTAMP_TO_LOCAL_DATETIME,
             SQL_TIMESTAMP_TO_OFFSET_DATETIME, SQL_TIMESTAMP_TO_STRING, SQL_TIMESTAMP_TO_ZONED_DATETIME, ZONED_DATETIME_TO_STRING,
-            ZONED_DATETIME_TO_SQL_TIMESTAMP, LOCAL_TIME_TO_STRING, LOCAL_TIME_TO_TIMESTAMP, STRING_TO_LOCAL_TIME,
-            STRING_TO_TIME, TIME_TO_STRING, TIME_TO_LOCAL_TIME, LOCAL_DATE_TIME_TO_LOCAL_DATE,
-            OFFSET_DATE_TIME_TO_LOCAL_DATE, OFFSET_TIME_TO_LOCAL_TIME, SQL_TIMESTAMP_TO_LOCAL_DATE,
-            ZONED_DATE_TIME_TO_LOCAL_DATE);
+            ZONED_DATETIME_TO_SQL_TIMESTAMP, LOCAL_TIME_TO_STRING, LOCAL_TIME_TO_TIME, LOCAL_TIME_TO_TIMESTAMP,
+            STRING_TO_LOCAL_TIME, STRING_TO_TIME, TIME_TO_STRING, TIME_TO_LOCAL_TIME, LOCAL_DATE_TIME_TO_LOCAL_DATE,
+            OFFSET_DATE_TIME_TO_LOCAL_DATE, OFFSET_DATE_TIME_TO_LOCAL_DATE_TIME, OFFSET_TIME_TO_LOCAL_TIME, SQL_TIMESTAMP_TO_LOCAL_DATE,
+            ZONED_DATE_TIME_TO_LOCAL_DATE, LOCAL_TIME_TO_OFFSET_TIME, OFFSET_TIME_TO_STRING, OFFSET_TIME_TO_SQL_TIME,
+            STRING_TO_OFFSET_TIME, TIMESTAMP_TO_LOCAL_TIME);
 
     private ConverterFactory converterFactory;
 
@@ -128,6 +138,8 @@ public class Java8Module {
         SQL_TIMESTAMP_TO_STRING.setFormatter(TIMESTAMP_FORMATTER);
         TIME_TO_STRING.setFormatter(TIME_FORMATTER);
         ZONED_DATETIME_TO_STRING.setFormatter(ZONED_DATETIME_FORMATTER);
+        STRING_TO_OFFSET_TIME.setFormatter(OFFSET_TIME_FORMATTER);
+        OFFSET_TIME_TO_STRING.setFormatter(OFFSET_TIME_FORMATTER);
 
         CONVERTERS.forEach(c -> converterFactory.registerConverter(c));
     }
