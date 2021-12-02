@@ -198,6 +198,7 @@ public class DefaultCoercerTest {
         log.debug(" - string: {}", dateString);
         assertThat(dateString, equalTo(str));
         assertThat(coercer.coerce(dateString, LocalDate.class), equalTo(dateValue));
+        assertThat(coercer.coerce(dateValue, LocalDate.class), equalTo(dateValue));
     }
 
     @Test
@@ -375,6 +376,9 @@ public class DefaultCoercerTest {
 //        assertThat(localTime.toNanoOfDay() / (1000 * 1000), equalTo(timeValue.getTime()));
         assertThat(localTime.getHour(), equalTo(timeValue.getHours()));
         assertThat(coercer.coerce(localTime, Time.class), equalTo(timeValue));
+        assertThat(coercer.coerce(coercer.coerce(localTime, OffsetTime.class), LocalTime.class), equalTo(localTime));
+        assertThat(coercer.coerce(coercer.coerce(localTime, LocalDateTime.class), LocalTime.class), equalTo(localTime));
+        assertThat(coercer.coerce(coercer.coerce(localTime, Timestamp.class), LocalTime.class), equalTo(localTime));
     }
 
 
