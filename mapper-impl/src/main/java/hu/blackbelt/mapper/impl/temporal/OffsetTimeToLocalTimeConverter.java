@@ -19,6 +19,6 @@ public class OffsetTimeToLocalTimeConverter implements Converter<OffsetTime, Loc
 
     @Override
     public LocalTime apply(final OffsetTime offsetTime) {
-        return offsetTime.toLocalTime();
+        return offsetTime.withOffsetSameInstant(ZoneOffset.UTC).toLocalTime();
     }
 }

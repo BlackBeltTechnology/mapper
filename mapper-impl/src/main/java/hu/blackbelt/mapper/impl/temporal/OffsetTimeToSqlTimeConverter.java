@@ -19,6 +19,6 @@ public class OffsetTimeToSqlTimeConverter implements Converter<OffsetTime, Time>
 
     @Override
     public Time apply(final OffsetTime offsetTime) {
-        return Time.valueOf(offsetTime.toLocalTime());
+        return Time.valueOf(offsetTime.withOffsetSameInstant(ZoneOffset.UTC).toLocalTime());
     }
 }
