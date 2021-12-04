@@ -4,6 +4,7 @@ import hu.blackbelt.mapper.api.Converter;
 
 import java.time.LocalTime;
 import java.time.OffsetTime;
+import java.time.ZoneOffset;
 
 public class OffsetTimeToLocalTimeConverter implements Converter<OffsetTime, LocalTime> {
 

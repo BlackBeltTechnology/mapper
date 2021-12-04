@@ -4,6 +4,7 @@ import hu.blackbelt.mapper.api.Converter;
 
 import java.sql.Time;
 import java.time.OffsetTime;
+import java.time.ZoneOffset;
 
 public class OffsetTimeToSqlTimeConverter implements Converter<OffsetTime, Time> {
 
