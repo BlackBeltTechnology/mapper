@@ -1,11 +1,13 @@
 package hu.blackbelt.mapper.impl.temporal;
 
 import hu.blackbelt.mapper.api.Converter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-public class TimestampToLocalDateTimeConverter implements Converter<Timestamp, LocalDateTime> {
+@Slf4j
+public class SqlTimestampToLocalDateTimeConverter implements Converter<Timestamp, LocalDateTime> {
 
     @Override
     public Class<Timestamp> getSourceType() {

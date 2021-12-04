@@ -5,7 +5,7 @@ import hu.blackbelt.mapper.api.Converter;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 
-public class OffsetDateTimeToTimestampConverter implements Converter<OffsetDateTime, Timestamp> {
+public class OffsetDateTimeToSqlTimestampConverter implements Converter<OffsetDateTime, Timestamp> {
 
     @Override
     public Class<OffsetDateTime> getSourceType() {

@@ -9,7 +9,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 @Slf4j
-public class TimestampToZonedDateTimeConverter implements Converter<Timestamp, ZonedDateTime> {
+public class SqlTimestampToZonedDateTimeConverter implements Converter<Timestamp, ZonedDateTime> {
 
     @Override
     public Class<Timestamp> getSourceType() {
