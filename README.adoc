@@ -1,6 +1,6 @@
-= osgi-filestore
+= mapper
 
-image::https://github.com/BlackBeltTechnology/osgi-filestore/actions/workflows/build.yml/badge.svg?branch=develop[link="https://github.com/BlackBeltTechnology/osgi-filestore/actions/workflows/build.yml" float="center"]
+image::https://github.com/BlackBeltTechnology/mapper/actions/workflows/build.yml/badge.svg?branch=develop[link="https://github.com/BlackBeltTechnology/mapper/actions/workflows/build.yml" float="center"]
 
 == Introduction
 
@@ -9,7 +9,7 @@ upload and download and act as an OSGi service.
 
 == Contributing to the project
 
-Everyone is welcome to contribute to osgi-filestore! As a starter, please read the corresponding link:CONTRIBUTING.adoc[CONTRIBUTING] guide for details!
+Everyone is welcome to contribute to mapper! As a starter, please read the corresponding link:CONTRIBUTING.adoc[CONTRIBUTING] guide for details!
 
 
 == License

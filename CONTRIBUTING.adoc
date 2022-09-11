@@ -1,8 +1,8 @@
-# Contributing to osgi-filestore
+# Contributing to mapper
 
 ## Installing the correct versions of Java, Maven and necessary dependencies
 
-osgi-filestore is currently built on top of JDK 11.
+mapper is currently built on top of JDK 11.
 
 Contributors, and CI/CD agents are bot expected to use https://www.azul.com/downloads/?version=java-11-lts&package=jdk[Zulu JDK]
 
@@ -54,7 +54,7 @@ We will be insisting on a minimal reproduction in order to save maintainers' tim
 bugs. We understand that sometimes it might be hard to extract essentials bits of code from a larger codebase, but we
 really need to isolate the problem before we can fix it.
 
-You can file new issues by filling out our https://github.com/BlackBeltTechnology/osgi-filestore/issues/new/choose[issue form].
+You can file new issues by filling out our https://github.com/BlackBeltTechnology/mapper/issues/new/choose[issue form].
 
 ### Submitting a PR
 
