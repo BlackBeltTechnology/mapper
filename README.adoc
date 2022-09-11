@@ -4,8 +4,7 @@ image::https://github.com/BlackBeltTechnology/mapper/actions/workflows/build.yml
 
 == Introduction
 
-This is a simple blob based file store service, which can store files in RDBMS and filesystem, it has Servlet for
-upload and download and act as an OSGi service.
+This is a simple type mapper and coercer to generalize covnersation between data types.
 
 == Contributing to the project
 
