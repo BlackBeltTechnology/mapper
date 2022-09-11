@@ -85,27 +85,12 @@
         <surefire-version>3.0.0-M7</surefire-version>
 
         <!-- Code Quality-->
-        <!--
-        <sonar.projectKey>mapper</sonar.projectKey>
-        -->
         <sonar-maven-plugin-version>3.9.1.2184</sonar-maven-plugin-version>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.language>java</sonar.language>
         <sonar.java.source>${java.version}</sonar.java.source>
-        <!--
-        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-        -->
         <jacoco.version>0.8.8</jacoco.version>
-
-        <!-- Point the Sonar Qube Plugin always to the same aggregated JaCoCo report -->
-        <!--
-        <sonar.coverage.jacoco.xmlReportPaths>
-            ${project.basedir}/../mapper-impl/target/site/jacoco-aggregate/jacoco.xml,
-            < the next extra directory is not strictly necessary, but suppresses a warning when running on the reactor pom>
-            ${project.basedir}/mapper-impl/target/site/jacoco-aggregate/jacoco.xml
-        </sonar.coverage.jacoco.xmlReportPaths>
-        -->
     </properties>
 
     <dependencyManagement>
