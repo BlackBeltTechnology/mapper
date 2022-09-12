@@ -5,8 +5,8 @@ import hu.blackbelt.mapper.api.Converter;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.options.MavenArtifactUrlReference;
@@ -17,27 +17,29 @@ import org.osgi.service.log.LogService;
 
 import javax.inject.Inject;
 
+import java.net.MalformedURLException;
 import java.util.Date;
 
+import static hu.blackbelt.mapper.itest.utils.KarafFeatureProvider.karafConfig;
 import static org.hamcrest.core.Is.is;
 import static org.ops4j.pax.exam.CoreOptions.*;
+import static org.ops4j.pax.exam.OptionUtils.combine;
 import static org.ops4j.pax.exam.OptionUtils.expand;
 import static org.ops4j.pax.exam.cm.ConfigurationAdminOptions.newConfiguration;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.*;
 
-@Category(MapperTestSuite.class)
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class ExtendableCoerserServiceTest extends StandardKarafTest {
+public class CoercerServiceTest {
 
     public static final String MAPPER_OSGI = "mapper-osgi";
     public static final String MAPPER_JODA_TIME = "mapper-jodatime";
 
     private static final String COERCER_ALIAS = "DefaultCoercerService";
 
-    @Override
-    Option[] getAdditionalConfigOptions() {
-        return expand(
+    @Configuration
+    public Option[] config() throws MalformedURLException {
+        return combine(karafConfig(this.getClass()),
                 features(mapperFeature(), MAPPER_OSGI, MAPPER_JODA_TIME)
 
                 , newConfiguration("hu.blackbelt.mapper.osgi.ExtendableCoercerService")
@@ -74,6 +76,9 @@ public class ExtendableCoerserServiceTest extends StandardKarafTest {
     @Filter("(&(from=java.lang.String)(to=org.joda.time.LocalDate))")
     Converter stringToLocalDateConverter;
 
+
+    @Inject
+    LogService log;
     @Test
     public void testStringToLong() {
         test("123456", 123456L, Long.class);
