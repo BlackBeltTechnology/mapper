@@ -254,7 +254,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.11</version>
+            <version>1.4.1</version>
         </dependency>
 
         <dependency>
@@ -453,7 +453,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.1.2</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -584,7 +584,7 @@
 
             <properties>
                 <asciidoctor.maven.plugin.version>2.2.2</asciidoctor.maven.plugin.version>
-                <asciidoctorj.version>2.5.5</asciidoctorj.version>
+                <asciidoctorj.version>2.5.6</asciidoctorj.version>
                 <asciidoctorj.diagram.version>2.2.3</asciidoctorj.diagram.version>
                 <jruby.version>9.3.4.0</jruby.version>
             </properties>
