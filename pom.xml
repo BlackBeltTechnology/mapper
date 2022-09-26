@@ -71,7 +71,7 @@
 
         <guava-version>27.1-jre</guava-version>
 
-        <jupiter-version>5.5.1</jupiter-version>
+        <jupiter-version>5.9.1</jupiter-version>
         <mockito-version>3.0.0</mockito-version>
         <hamcrest-version>2.1</hamcrest-version>
 
@@ -254,7 +254,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.11</version>
+            <version>1.4.1</version>
         </dependency>
 
         <dependency>
@@ -453,7 +453,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.1.2</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
