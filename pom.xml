@@ -71,7 +71,7 @@
 
         <guava-version>27.1-jre</guava-version>
 
-        <jupiter-version>5.5.1</jupiter-version>
+        <jupiter-version>5.9.1</jupiter-version>
         <mockito-version>3.0.0</mockito-version>
         <hamcrest-version>2.1</hamcrest-version>
 
