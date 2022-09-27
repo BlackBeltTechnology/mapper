@@ -75,7 +75,7 @@
         <mockito-version>4.8.0</mockito-version>
         <hamcrest-version>2.2</hamcrest-version>
 
-        <joda-time-version>2.10.3</joda-time-version>
+        <joda-time-version>2.11.2</joda-time-version>
         <pax-exam-version>4.13.4</pax-exam-version>
         <karaf-version>4.3.6</karaf-version>
 
