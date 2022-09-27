@@ -9,6 +9,7 @@ import org.junit.jupiter.api.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.*;
 import java.util.Calendar;
@@ -197,6 +198,7 @@ public class DefaultCoercerTest {
         log.debug(" - string: {}", dateString);
         assertThat(dateString, equalTo(str));
         assertThat(coercer.coerce(dateString, LocalDate.class), equalTo(dateValue));
+        assertThat(coercer.coerce(dateValue, LocalDate.class), equalTo(dateValue));
     }
 
     @Test
@@ -209,6 +211,18 @@ public class DefaultCoercerTest {
         log.debug(" - string: {}", localDateTimeString);
         assertThat(localDateTimeString, equalTo(str));
         assertThat(coercer.coerce(localDateTimeString, LocalDateTime.class), equalTo(localDateTimeValue));
+    }
+
+    @Test
+    @DisplayName("Test local time - string conversion (with time)")
+    void testLocalTime() {
+        final String str = "16:34:12.123456789";
+        final LocalTime localTimeValue = LocalTime.of(16, 34, 12, 123456789);
+        log.debug("Local time value: {}", localTimeValue);
+        final String localTimeString = coercer.coerce(localTimeValue, String.class);
+        log.debug(" - string: {}", localTimeString);
+        assertThat(localTimeString, equalTo(str));
+        assertThat(coercer.coerce(localTimeString, LocalTime.class), equalTo(localTimeValue));
     }
 
     @Test
@@ -292,10 +306,23 @@ public class DefaultCoercerTest {
         final String str = "2019-07-29T12:13:14.123456789";
         final Timestamp timestampValue = new Timestamp(119, Calendar.JULY, 29, 12, 13, 14, 123456789);
         log.debug("Timestamp value: {}", timestampValue);
-        final String dateString = coercer.coerce(timestampValue, String.class);
-        log.debug(" - string: {}", dateString);
-        assertThat(dateString, equalTo(str));
-        assertThat(coercer.coerce(dateString, Timestamp.class), equalTo(timestampValue));
+        final String timestampString = coercer.coerce(timestampValue, String.class);
+        log.debug(" - string: {}", timestampString);
+        assertThat(timestampString, equalTo(str));
+        assertThat(coercer.coerce(timestampString, Timestamp.class), equalTo(timestampValue));
+    }
+
+    @Test
+    @DisplayName("Test time - string conversion")
+    void testTime() {
+        final String str = "12:13:14";
+        final Time timeValue = Time.valueOf(LocalTime.of(12, 13, 14, 0));
+
+        log.debug("Time value: {}", timeValue);
+        final String timeString = coercer.coerce(timeValue, String.class);
+        log.debug(" - string: {}", timeString);
+        assertThat(timeString, equalTo(str));
+        assertThat(coercer.coerce(timeString, Time.class), equalTo(timeValue));
     }
 
     @Test
@@ -325,7 +352,7 @@ public class DefaultCoercerTest {
 
     @Test
     @DisplayName("Test SQL date - date conversion (source is assignable to target type)")
-    void testSqlDateToSqlDate() {
+    void testSqlDateToDate() {
         final Date expectedDate = new Date(119, Calendar.JULY, 29);
         final java.sql.Date sqlDate = new java.sql.Date(119, Calendar.JULY, 29);
         log.debug("SQL date value: {}", sqlDate);
@@ -334,6 +361,26 @@ public class DefaultCoercerTest {
         assertThat(date, equalTo(expectedDate));
         assertThat(coercer.coerce(date, java.sql.Date.class), equalTo(sqlDate));
     }
+
+    @Test
+    @DisplayName("Test SQL Time - LocalTime conversion (source is assignable to target type)")
+    void testSqlTimeToLocalTime() {
+//        final String str = "12:13:14.123";
+        final String str = "12:13:14";
+//        final Time timeValue = new Time(LocalTime.of(12, 13, 14, 123 * 1000 * 1000).toNanoOfDay() / (1000 * 1000));
+        final Time timeValue = Time.valueOf(LocalTime.of(12, 13, 14, 0));
+        log.debug("Time value: {}", timeValue);
+
+        final LocalTime localTime = coercer.coerce(timeValue, LocalTime.class);
+        log.debug(" - localTime: {}", localTime);
+//        assertThat(localTime.toNanoOfDay() / (1000 * 1000), equalTo(timeValue.getTime()));
+        assertThat(localTime.getHour(), equalTo(timeValue.getHours()));
+        assertThat(coercer.coerce(localTime, Time.class), equalTo(timeValue));
+        assertThat(coercer.coerce(coercer.coerce(localTime, OffsetTime.class), LocalTime.class), equalTo(localTime));
+        assertThat(coercer.coerce(coercer.coerce(localTime, LocalDateTime.class), LocalTime.class), equalTo(localTime));
+        assertThat(coercer.coerce(coercer.coerce(localTime, Timestamp.class), LocalTime.class), equalTo(localTime));
+    }
+
 
     @Test
     @DisplayName("Test SQL date - date conversion (source is not assignable to target type)")

@@ -4,8 +4,7 @@
     <parent>
         <groupId>hu.blackbelt.mapper</groupId>
         <artifactId>mapper-parent</artifactId>
-        <version>1.0.2</version>
-        <relativePath>../</relativePath>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>mapper-jodatime</artifactId>
@@ -25,11 +24,6 @@
                         </Export-Package>
                     </instructions>
                 </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
@@ -51,10 +45,6 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
