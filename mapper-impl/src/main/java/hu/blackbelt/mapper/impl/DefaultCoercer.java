@@ -174,6 +174,10 @@ public class DefaultCoercer implements ExtendableCoercer {
         } else if (resolvedTargetClassName.equals(Object.class.getName())) {
             return (T) sourceValue;
         } else {
+            if (getConverterFactory().getConvertersTo(resolvedTargetClassName).stream()
+                    .noneMatch(c -> c.getSourceType().isAssignableFrom(String.class))) {
+                throw new UnsupportedOperationException("No string parser found for " + resolvedTargetClassName);
+            }
             // try to convert value to String and the result to the expected type
             final String str = convertToString(sourceValue);
             final T converted = coerceUsingConverterByClassName(str, resolvedTargetClassName);
