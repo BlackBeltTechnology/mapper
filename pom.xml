@@ -72,7 +72,7 @@
         <guava-version>27.1-jre</guava-version>
 
         <jupiter-version>5.9.1</jupiter-version>
-        <mockito-version>4.8.0</mockito-version>
+        <mockito-version>4.11.0</mockito-version>
         <hamcrest-version>2.2</hamcrest-version>
 
         <joda-time-version>2.11.2</joda-time-version>
