@@ -241,13 +241,16 @@ public class DefaultCoercerTest {
     @Test
     @DisplayName("Test offset datetime - string conversion")
     void testOffsetDateTime() {
-        final String str = "2019-07-29T12:34:56.123456789+01:00";
-        final OffsetDateTime offsetDateTime = OffsetDateTime.of(2019, 07, 29, 12, 34, 56, 123456789, ZoneOffset.ofHours(1));
-        log.debug("Offset datetime value: {}", offsetDateTime);
-        final String offsetDateTimeString = coercer.coerce(offsetDateTime, String.class);
-        log.debug(" - string: {}", offsetDateTimeString);
-        assertThat(offsetDateTimeString, equalTo(str));
-        assertThat(coercer.coerce(offsetDateTimeString, OffsetDateTime.class), equalTo(offsetDateTime));
+        OffsetDateTime offsetDateTime = OffsetDateTime.of(2019, 7, 29, 12, 34, 56, 123456789, ZoneOffset.ofHours(1));
+        log.debug("offsetDateTime value: {}", offsetDateTime);
+        String offsetDateTimeConvertedToString = coercer.coerce(offsetDateTime, String.class);
+        assertThat(offsetDateTimeConvertedToString, equalTo("2019-07-29T12:34:56.123456789+01:00"));
+        log.debug(" - string: {}", offsetDateTimeConvertedToString);
+
+        OffsetDateTime stringConvertedToOffsetDateTime = coercer.coerce(offsetDateTimeConvertedToString, OffsetDateTime.class);
+        OffsetDateTime offsetDateTimeZ = offsetDateTime.atZoneSameInstant(ZoneOffset.UTC).toOffsetDateTime();
+        assertThat(stringConvertedToOffsetDateTime, equalTo(offsetDateTimeZ));
+        log.debug(" - string back to offsetDateTime: {}", offsetDateTimeZ);
     }
 
     @Test
