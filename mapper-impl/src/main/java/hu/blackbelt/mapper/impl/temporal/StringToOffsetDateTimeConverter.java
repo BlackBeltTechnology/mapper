@@ -26,6 +26,6 @@ public class StringToOffsetDateTimeConverter implements Converter<String, Offset
 
     @Override
     public OffsetDateTime apply(final String s) {
-        return formatter.parseString(s).atZoneSameInstant(ZoneOffset.UTC).toOffsetDateTime();
+        return formatter.parseString(s).withOffsetSameInstant(ZoneOffset.UTC);
     }
 }
