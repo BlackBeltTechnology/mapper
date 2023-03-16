@@ -22,11 +22,11 @@ public class LocalDateTimeToOffsetDateTimeConverter implements Converter<LocalDa
      * Time is returned in UTC because no zone is available in LocalDateTime type. Need to adjust by
      * application if other Time is needed.
      *
-     * @param time SQL Time value
+     * @param localDateTime SQL Time value
      * @return offset datetime
      */
     @Override
-    public OffsetDateTime apply(final LocalDateTime time) {
-        return time.toInstant(ZoneOffset.UTC).atOffset(ZoneOffset.UTC);
+    public OffsetDateTime apply(final LocalDateTime localDateTime) {
+        return localDateTime.atOffset(ZoneOffset.UTC);
     }
 }
