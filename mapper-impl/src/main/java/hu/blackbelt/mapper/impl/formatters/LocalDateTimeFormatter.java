@@ -23,8 +23,14 @@ public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
             try {
                 return OffsetDateTime.from(DateTimeFormatter.ISO_OFFSET_DATE_TIME.parse(str)).atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
             } catch (Exception e1) {
-                log.debug("Unable to parse string (" + str + ") to OffsetDateTime", e1);
-                throw new IllegalArgumentException("Unable to parse string (" + str + ") to LocalDateTime", e);
+                log.debug("Unable to parse string (" + str + ") to OffsetDateTime, retrying with LocalTime", e1);
+                try {
+                    LocalTime localTime = LocalTime.parse(str);
+                    return LocalDateTime.ofEpochSecond(localTime.toSecondOfDay(), localTime.getNano(), ZoneOffset.UTC);
+                } catch (Exception e2) {
+                    log.debug("Unable to parse string (" + str + ") to LocalTime", e2);
+                    throw new IllegalArgumentException("Unable to parse string (" + str + ") to LocalDateTime", e);
+                }
             }
         }
     }
