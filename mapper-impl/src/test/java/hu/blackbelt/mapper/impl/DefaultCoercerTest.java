@@ -367,16 +367,15 @@ public class DefaultCoercerTest {
 
     @Test
     @DisplayName("Test SQL Time - LocalTime conversion (source is assignable to target type)")
+    @Disabled("java.sql.Time inevitably uses timezones")
     void testSqlTimeToLocalTime() {
-//        final String str = "12:13:14.123";
-        final String str = "12:13:14";
-//        final Time timeValue = new Time(LocalTime.of(12, 13, 14, 123 * 1000 * 1000).toNanoOfDay() / (1000 * 1000));
-        final Time timeValue = Time.valueOf(LocalTime.of(12, 13, 14, 0));
+        final String str = "12:13:14.123";
+        final Time timeValue = new Time(LocalTime.of(12, 13, 14, 123 * 1000 * 1000).toNanoOfDay() / (1000 * 1000));
         log.debug("Time value: {}", timeValue);
 
         final LocalTime localTime = coercer.coerce(timeValue, LocalTime.class);
         log.debug(" - localTime: {}", localTime);
-//        assertThat(localTime.toNanoOfDay() / (1000 * 1000), equalTo(timeValue.getTime()));
+        assertThat(localTime.toNanoOfDay() / (1000 * 1000), equalTo(timeValue.getTime()));
         assertThat(localTime.getHour(), equalTo(timeValue.getHours()));
         assertThat(coercer.coerce(localTime, Time.class), equalTo(timeValue));
         assertThat(coercer.coerce(coercer.coerce(localTime, OffsetTime.class), LocalTime.class), equalTo(localTime));

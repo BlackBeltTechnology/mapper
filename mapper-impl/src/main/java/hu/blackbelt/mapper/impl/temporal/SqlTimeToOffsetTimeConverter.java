@@ -3,8 +3,7 @@ package hu.blackbelt.mapper.impl.temporal;
 import hu.blackbelt.mapper.api.Converter;
 
 import java.sql.Time;
-import java.time.OffsetTime;
-import java.time.ZoneOffset;
+import java.time.*;
 
 public class SqlTimeToOffsetTimeConverter implements Converter<Time, OffsetTime> {
 
@@ -27,6 +26,6 @@ public class SqlTimeToOffsetTimeConverter implements Converter<Time, OffsetTime>
      */
     @Override
     public OffsetTime apply(final Time time) {
-        return time.toLocalTime().atOffset(ZoneOffset.UTC);
+        return Instant.ofEpochMilli(time.getTime()).atOffset(ZoneOffset.UTC).toOffsetTime();
     }
 }
