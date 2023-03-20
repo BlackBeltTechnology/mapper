@@ -3,7 +3,7 @@ package hu.blackbelt.mapper.impl.temporal;
 import hu.blackbelt.mapper.api.Converter;
 
 import java.sql.Time;
-import java.time.LocalTime;
+import java.time.*;
 
 public class SqlTimeToLocalTimeConverter implements Converter<Time, LocalTime> {
 
@@ -19,6 +19,6 @@ public class SqlTimeToLocalTimeConverter implements Converter<Time, LocalTime> {
 
     @Override
     public LocalTime apply(final Time time) {
-        return time.toLocalTime();
+        return Instant.ofEpochMilli(time.getTime()).atOffset(ZoneOffset.UTC).toLocalTime();
     }
 }
