@@ -20,28 +20,32 @@ package hu.blackbelt.mapper.impl.formatters;
  * #L%
  */
 
-import hu.blackbelt.mapper.api.ConverterException;
 import hu.blackbelt.mapper.api.Formatter;
+import lombok.extern.slf4j.Slf4j;
 
-import java.time.OffsetDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
+@Slf4j
 public class OffsetDateTimeFormatter implements Formatter<OffsetDateTime> {
-
-    private DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     @Override
     public String convertValueToString(final OffsetDateTime value) {
-        return formatter.format(value);
+        return DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(value);
     }
 
     @Override
     public OffsetDateTime parseString(final String str) {
         try {
-            return OffsetDateTime.from(formatter.parse(str));
-        } catch (DateTimeParseException ex) {
-            throw new ConverterException("Unable to parse string as OffsetDateTime", ex);
+            return OffsetDateTime.from(DateTimeFormatter.ISO_OFFSET_DATE_TIME.parse(str));
+        } catch (Exception e) {
+            log.debug("Unable to parse string (" + str + ") to OffsetDateTime, retrying with LocalDateTime");
+            try {
+                return LocalDateTime.from(DateTimeFormatter.ISO_LOCAL_DATE_TIME.parse(str)).atOffset(ZoneOffset.UTC);
+            } catch (Exception e1) {
+                log.debug("Unable to parse string (" + str + ") to LocalDateTime", e1);
+                throw new IllegalArgumentException("Unable to parse string (" + str + ") to OffsetDateTime", e);
+            }
         }
     }
 
@@ -49,4 +53,5 @@ public class OffsetDateTimeFormatter implements Formatter<OffsetDateTime> {
     public Class<OffsetDateTime> getType() {
         return OffsetDateTime.class;
     }
+
 }

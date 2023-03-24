@@ -24,6 +24,7 @@ import hu.blackbelt.mapper.api.Converter;
 import hu.blackbelt.mapper.api.Formatter;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 public class StringToOffsetDateTimeConverter implements Converter<String, OffsetDateTime> {
 
@@ -45,6 +46,6 @@ public class StringToOffsetDateTimeConverter implements Converter<String, Offset
 
     @Override
     public OffsetDateTime apply(final String s) {
-        return formatter.parseString(s);
+        return formatter.parseString(s).withOffsetSameInstant(ZoneOffset.UTC);
     }
 }

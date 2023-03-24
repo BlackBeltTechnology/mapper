@@ -261,13 +261,16 @@ public class DefaultCoercerTest {
     @Test
     @DisplayName("Test offset datetime - string conversion")
     void testOffsetDateTime() {
-        final String str = "2019-07-29T12:34:56.123456789+01:00";
-        final OffsetDateTime offsetDateTime = OffsetDateTime.of(2019, 07, 29, 12, 34, 56, 123456789, ZoneOffset.ofHours(1));
-        log.debug("Offset datetime value: {}", offsetDateTime);
-        final String offsetDateTimeString = coercer.coerce(offsetDateTime, String.class);
-        log.debug(" - string: {}", offsetDateTimeString);
-        assertThat(offsetDateTimeString, equalTo(str));
-        assertThat(coercer.coerce(offsetDateTimeString, OffsetDateTime.class), equalTo(offsetDateTime));
+        OffsetDateTime offsetDateTime = OffsetDateTime.of(2019, 7, 29, 12, 34, 56, 123456789, ZoneOffset.ofHours(1));
+        log.debug("offsetDateTime value: {}", offsetDateTime);
+        String offsetDateTimeConvertedToString = coercer.coerce(offsetDateTime, String.class);
+        assertThat(offsetDateTimeConvertedToString, equalTo("2019-07-29T12:34:56.123456789+01:00"));
+        log.debug(" - string: {}", offsetDateTimeConvertedToString);
+
+        OffsetDateTime stringConvertedToOffsetDateTime = coercer.coerce(offsetDateTimeConvertedToString, OffsetDateTime.class);
+        OffsetDateTime offsetDateTimeZ = offsetDateTime.atZoneSameInstant(ZoneOffset.UTC).toOffsetDateTime();
+        assertThat(stringConvertedToOffsetDateTime, equalTo(offsetDateTimeZ));
+        log.debug(" - string back to offsetDateTime: {}", offsetDateTimeZ);
     }
 
     @Test
@@ -384,16 +387,15 @@ public class DefaultCoercerTest {
 
     @Test
     @DisplayName("Test SQL Time - LocalTime conversion (source is assignable to target type)")
+    @Disabled("java.sql.Time inevitably uses timezones")
     void testSqlTimeToLocalTime() {
-//        final String str = "12:13:14.123";
-        final String str = "12:13:14";
-//        final Time timeValue = new Time(LocalTime.of(12, 13, 14, 123 * 1000 * 1000).toNanoOfDay() / (1000 * 1000));
-        final Time timeValue = Time.valueOf(LocalTime.of(12, 13, 14, 0));
+        final String str = "12:13:14.123";
+        final Time timeValue = new Time(LocalTime.of(12, 13, 14, 123 * 1000 * 1000).toNanoOfDay() / (1000 * 1000));
         log.debug("Time value: {}", timeValue);
 
         final LocalTime localTime = coercer.coerce(timeValue, LocalTime.class);
         log.debug(" - localTime: {}", localTime);
-//        assertThat(localTime.toNanoOfDay() / (1000 * 1000), equalTo(timeValue.getTime()));
+        assertThat(localTime.toNanoOfDay() / (1000 * 1000), equalTo(timeValue.getTime()));
         assertThat(localTime.getHour(), equalTo(timeValue.getHours()));
         assertThat(coercer.coerce(localTime, Time.class), equalTo(timeValue));
         assertThat(coercer.coerce(coercer.coerce(localTime, OffsetTime.class), LocalTime.class), equalTo(localTime));

@@ -22,8 +22,7 @@ package hu.blackbelt.mapper.impl.temporal;
 
 import hu.blackbelt.mapper.api.Converter;
 
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
+import java.time.*;
 
 public class OffsetDateTimeToLocalDateConverter implements Converter<OffsetDateTime, LocalDate> {
 
@@ -39,6 +38,6 @@ public class OffsetDateTimeToLocalDateConverter implements Converter<OffsetDateT
 
     @Override
     public LocalDate apply(final OffsetDateTime offsetDateTime) {
-        return offsetDateTime.toLocalDateTime().toLocalDate();
+        return offsetDateTime.atZoneSameInstant(ZoneOffset.UTC).toOffsetDateTime().toLocalDate();
     }
 }
