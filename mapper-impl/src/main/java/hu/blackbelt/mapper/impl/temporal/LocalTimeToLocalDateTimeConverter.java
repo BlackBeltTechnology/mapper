@@ -26,7 +26,6 @@ public class LocalTimeToLocalDateTimeConverter implements Converter<LocalTime, L
      */
     @Override
     public LocalDateTime apply(final LocalTime time) {
-        return LocalDateTime.ofEpochSecond(
-                time.toEpochSecond(LocalDate.EPOCH, ZoneOffset.UTC), time.getNano(), ZoneOffset.UTC);
+        return LocalDateTime.ofEpochSecond(time.toEpochSecond(LocalDate.EPOCH, ZoneOffset.UTC), time.getNano(), ZoneOffset.UTC);
     }
 }
