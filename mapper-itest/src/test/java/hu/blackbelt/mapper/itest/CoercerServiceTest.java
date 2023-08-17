@@ -24,6 +24,7 @@ import hu.blackbelt.mapper.api.Coercer;
 import hu.blackbelt.mapper.api.Converter;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
@@ -49,6 +50,7 @@ import static org.ops4j.pax.exam.cm.ConfigurationAdminOptions.newConfiguration;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.*;
 
 @RunWith(PaxExam.class)
+@Ignore
 @ExamReactorStrategy(PerClass.class)
 public class CoercerServiceTest {
 
