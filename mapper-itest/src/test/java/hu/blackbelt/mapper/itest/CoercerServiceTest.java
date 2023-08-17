@@ -84,7 +84,12 @@ public class CoercerServiceTest {
     }
 
     static MavenArtifactUrlReference mapperFeature() {
-        return maven().groupId("hu.blackbelt.mapper").artifactId("features").versionAsInProject().classifier("features").type("xml");
+        return maven()
+                .groupId("hu.blackbelt.mapper")
+                .artifactId("features")
+                .versionAsInProject()
+                .classifier("features")
+                .type("xml");
     }
 
     @Inject

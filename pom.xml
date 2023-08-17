@@ -54,7 +54,7 @@
 
     <properties>
         <revision>1.0.4-SNAPSHOT</revision>
-        <maven>3.8.3</maven>
+        <maven>3.9.4</maven>
 
         <project-shortname>mapper</project-shortname>
         <project-repositoryId>BlackBeltTechnology/mapper</project-repositoryId>
@@ -70,8 +70,6 @@
 
         <osgi-version>6.0.0</osgi-version>
         <osgi-ds-version>1.3.0</osgi-ds-version>
-
-        <guava-version>30.0-jre</guava-version>
 
         <jupiter-version>5.9.1</jupiter-version>
         <mockito-version>4.8.0</mockito-version>
@@ -128,12 +126,6 @@
                 <scope>provided</scope>
             </dependency>
 
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava-version}</version>
-                <scope>provided</scope>
-            </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
@@ -222,7 +214,7 @@
                 <version>1</version>
                 <scope>test</scope>
             </dependency>
-
+            
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>mapper-api</artifactId>
@@ -246,7 +238,7 @@
         </dependencies>
     </dependencyManagement>
 
-    <dependencies>
+        <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -258,12 +250,78 @@
             <artifactId>logback-classic</artifactId>
             <version>1.2.11</version>
         </dependency>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${jupiter-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${jupiter-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${jupiter-version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-log</artifactId>
+            <version>0.18</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>6.0.0</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.cmpn</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.annotation</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.0.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>3.0.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -271,22 +329,6 @@
         <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
 
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.12.1</version>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.4.1</version>
-            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -350,85 +392,9 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-maven-plugin</artifactId>
-                <version>1.18.20.0</version>
-                <configuration>
-                    <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
-                    <outputDirectory>${project.basedir}/target/delombok</outputDirectory>
-                    <addOutputDirectory>false</addOutputDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>delombok</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.projectlombok</groupId>
-                        <artifactId>lombok</artifactId>
-                        <version>1.18.24</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.4.1</version>
-                <configuration>
-                    <source>8</source>
-                    <detectJavaApiLink>false</detectJavaApiLink>
-                    <failOnError>false</failOnError>
-                    <detectJavaApiLink>false</detectJavaApiLink>
-                    <sourcepath>${project.basedir}/target/delombok</sourcepath>
-                    <tags>
-                        <tag>
-                            <name>model</name>
-                            <placement>a</placement>
-                            <head>EMF Model</head>
-                        </tag>
-                        <tag>
-                            <name>generated</name>
-                            <placement>a</placement>
-                            <head>EMF Generated</head>
-                        </tag>
-                        <tag>
-                            <name>ordered</name>
-                            <placement>a</placement>
-                            <head>EMF Ordered</head>
-                        </tag>
-                        <tag>
-                            <name>param</name>
-                            <placement>a</placement>
-                            <head>EMF Param</head>
-                        </tag>
-                    </tags>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
-
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.10.1</version>
-                </plugin>
-
                 <plugin>
                     <groupId>org.apache.karaf.tooling</groupId>
                     <artifactId>karaf-maven-plugin</artifactId>
@@ -437,8 +403,28 @@
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.10.1</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-install-plugin</artifactId>
                     <version>2.5.2</version>
+                    <executions>
+                        <execution>
+                            <id>default-install</id>
+                            <configuration>
+                                <skip>${deployOnly}</skip>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>default-test</id>
+                            <configuration>
+                                <skip>${deployOnly}</skip>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
 
                 <plugin>
@@ -448,15 +434,9 @@
                 </plugin>
 
                 <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${jacoco.version}</version>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.sonarsource.scanner.maven</groupId>
-                    <artifactId>sonar-maven-plugin</artifactId>
-                    <version>${sonar-maven-plugin-version}</version>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>3.4.0</version>
                 </plugin>
 
                 <plugin>
@@ -485,55 +465,35 @@
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
-                            <Bundle-Version>${project.version}</Bundle-Version>
-<!--                            <Implementation-Build>${buildNumber}</Implementation-Build> -->
-                            <_dsannotations>*</_dsannotations>
-                            <_metatypeannotations>*</_metatypeannotations>
-                            <_include>${additional.manifest.file}</_include>
-                            <Export-Package/>
+                            <Export-Package>
+                                hu.blackbelt.epsilon.runtime.*;version=${project.version}
+                            </Export-Package>
                             <Import-Package>
-                                !javax.annotation,
                                 !lombok,
+                                javax.annotation;version="[1.0,2)",
                                 *
                             </Import-Package>
+                            <!-- <Include-Resource>{maven-resources}</Include-Resource> -->
                         </instructions>
                     </configuration>
-                    <executions>
-                        <execution>
-                            <id>bundle-manifest</id>
-                            <phase>process-classes</phase>
-                            <goals>
-                                <goal>manifest</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
+
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.version}</version>
                 </plugin>
+
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.3.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>jaxb2-maven-plugin</artifactId>
-                    <version>3.1.0</version>
-                    <executions>
-                        <execution>
-                            <id>xjc</id>
-                            <goals>
-                                <goal>xjc</goal>
-                            </goals>
-                        </execution>
-                    </executions>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>${sonar-maven-plugin-version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
+
     </build>
+
 
     <profiles>
         <profile>
@@ -580,28 +540,48 @@
         </profile>
 
         <profile>
-            <id>release-dummy</id>
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>dummy-distribution</id>
-                    <url>file:///tmp/${project.groupId}-${project.artifactId}-${project.version}/maven-snapshot/</url>
-                </snapshotRepository>
-                <repository>
-                    <id>dummy-distribution</id>
-                    <url>file:///tmp/${project.groupId}-${project.artifactId}-${project.version}/maven-release/</url>
-                </repository>
-            </distributionManagement>
-        </profile>
-
-        <profile>
             <id>release-judong</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>2.8.2</version>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.8</version>
+                        <executions>
+                            <execution>
+                                <id>judong-deploy</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                                <configuration>
+                                    <serverId>judong-nexus-distribution</serverId>
+                                    <nexusUrl>https://nexus.judo.technology/repository/maven-judong-snapshots</nexusUrl>
+                                    <skipStaging>true</skipStaging>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
             <distributionManagement>
                 <snapshotRepository>
                     <id>judong-nexus-distribution</id>
+                    <!--suppress UnresolvedMavenProperty -->
                     <url>https://nexus.judo.technology/repository/maven-judong-snapshots/</url>
                 </snapshotRepository>
                 <repository>
                     <id>judong-nexus-distribution</id>
+                    <!--suppress UnresolvedMavenProperty -->
                     <url>https://nexus.judo.technology/repository/maven-judong-snapshots/</url>
                 </repository>
             </distributionManagement>
@@ -612,15 +592,32 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>2.8.2</version>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                            <stagingProgressTimeoutMinutes>15</stagingProgressTimeoutMinutes>
-                        </configuration>
+                        <version>1.6.8</version>
+                        <executions>
+                            <execution>
+                                <id>ossrh-deploy</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                                <configuration>
+                                    <serverId>ossrh</serverId>
+                                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
@@ -641,7 +638,7 @@
 
             <properties>
                 <asciidoctor.maven.plugin.version>2.2.2</asciidoctor.maven.plugin.version>
-                <asciidoctorj.version>2.5.6</asciidoctorj.version>
+                <asciidoctorj.version>2.5.5</asciidoctorj.version>
                 <asciidoctorj.diagram.version>2.2.3</asciidoctorj.diagram.version>
                 <jruby.version>9.3.4.0</jruby.version>
             </properties>
@@ -792,4 +789,5 @@
             </build>
         </profile>
     </profiles>
+
 </project>
