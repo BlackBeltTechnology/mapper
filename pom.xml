@@ -65,7 +65,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
-        <slf4j-version>1.7.26</slf4j-version>
+        <slf4j-version>2.0.7</slf4j-version>
         <lombok-version>1.18.24</lombok-version>
 
         <osgi-version>6.0.0</osgi-version>
@@ -470,6 +470,7 @@
                             </Export-Package>
                             <Import-Package>
                                 !lombok,
+                                org.slf4j;version="[1.6,3)",
                                 javax.annotation;version="[1.0,2)",
                                 *
                             </Import-Package>
