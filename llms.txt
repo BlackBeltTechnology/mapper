@@ -34,6 +34,15 @@ Key facts:
 - [mapper-itest/pom.xml](mapper-itest/pom.xml): Pax Exam integration tests running in a Karaf 4.4.7 container
 - [mapper-reports/pom.xml](mapper-reports/pom.xml): JaCoCo code coverage aggregation across all modules
 
+## Used by
+
+- [judo-platform](../judo-platform): runtime/judo-platform
+- [judo-runtime-core](../judo-runtime-core): runtime/judo-runtime-core
+- [judo-runtime-core-jsl](../judo-runtime-core-jsl): runtime/judo-runtime-core-jsl
+- [judo-services](../judo-services): runtime/judo-services
+- [judo-jsl-springboot-parent](../../spring/judo-jsl-springboot-parent): spring/judo-jsl-springboot-parent
+- [judo-jsl-springboot-starter](../../spring/judo-jsl-springboot-starter): spring/judo-jsl-springboot-starter
+
 ## Optional
 
 - [.github/workflows/build.yml](.github/workflows/build.yml): CI/CD pipeline — build, test, deploy, tag, release
