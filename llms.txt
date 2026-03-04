@@ -1,0 +1,50 @@
+# Mapper
+
+> A Java type mapper and coercer library that provides generalized conversion between data types, with 60+ built-in converters and OSGi support.
+
+Key facts:
+- Java 21, built with Maven 3.9.4 (wrapper included)
+- Maven multi-module project, 8 modules
+- Pluggable `Converter<S,T>` architecture with runtime registration
+- 60+ built-in converters covering numeric, temporal, boolean, UUID, and string types
+- OSGi deployment via Apache Karaf 4.4.7 with dynamic service discovery
+- Optional Joda-Time extension module for legacy date/time compatibility
+- License: Apache License 2.0
+
+## Docs
+
+- [README.md](README.md): Project overview, architecture diagrams, and build commands
+- [AGENTS.md](AGENTS.md): Developer guide with module structure, technology stack, build commands, and coding conventions
+- [CONTRIBUTING.md](CONTRIBUTING.md): Setup instructions and contribution guidelines
+
+## Modules — Core
+
+- [mapper-api/pom.xml](mapper-api/pom.xml): Core interfaces — Coercer, ExtendableCoercer, Converter, ConverterFactory, ConverterRegistry, Formatter
+- [mapper-impl/pom.xml](mapper-impl/pom.xml): DefaultCoercer engine, DefaultConverterFactory, Java8Module with 60+ converters and 12 formatters
+- [mapper-jodatime/pom.xml](mapper-jodatime/pom.xml): Joda-Time extension — StringToLocalDateConverter, LocalDateToStringConverter, and LocalDateFormatter
+
+## Modules — OSGi & Deployment
+
+- [mapper-osgi/pom.xml](mapper-osgi/pom.xml): ExtendableCoercerService — extends DefaultCoercer with dynamic OSGi converter binding
+- [features/pom.xml](features/pom.xml): Karaf feature descriptors for mapper-core, mapper-jodatime, and mapper-osgi
+- [kar/pom.xml](kar/pom.xml): Karaf Archive (KAR) packaging for deployment
+
+## Modules — Testing & Quality
+
+- [mapper-itest/pom.xml](mapper-itest/pom.xml): Pax Exam integration tests running in a Karaf 4.4.7 container
+- [mapper-reports/pom.xml](mapper-reports/pom.xml): JaCoCo code coverage aggregation across all modules
+
+## Used by
+
+- [judo-platform](../judo-platform): runtime/judo-platform
+- [judo-runtime-core](../judo-runtime-core): runtime/judo-runtime-core
+- [judo-runtime-core-jsl](../judo-runtime-core-jsl): runtime/judo-runtime-core-jsl
+- [judo-services](../judo-services): runtime/judo-services
+- [judo-jsl-springboot-parent](../../spring/judo-jsl-springboot-parent): spring/judo-jsl-springboot-parent
+- [judo-jsl-springboot-starter](../../spring/judo-jsl-springboot-starter): spring/judo-jsl-springboot-starter
+
+## Optional
+
+- [.github/workflows/build.yml](.github/workflows/build.yml): CI/CD pipeline — build, test, deploy, tag, release
+- [.github/CIFLOW.md](.github/CIFLOW.md): Branching strategy, version numbering, CI/CD pipeline details
+- [LICENSE.txt](LICENSE.txt): Apache License 2.0 text
