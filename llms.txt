@@ -36,12 +36,12 @@ Key facts:
 
 ## Used by
 
-- [judo-platform](../judo-platform): runtime/judo-platform
-- [judo-runtime-core](../judo-runtime-core): runtime/judo-runtime-core
-- [judo-runtime-core-jsl](../judo-runtime-core-jsl): runtime/judo-runtime-core-jsl
-- [judo-services](../judo-services): runtime/judo-services
-- [judo-jsl-springboot-parent](../../spring/judo-jsl-springboot-parent): spring/judo-jsl-springboot-parent
-- [judo-jsl-springboot-starter](../../spring/judo-jsl-springboot-starter): spring/judo-jsl-springboot-starter
+- [judo-platform](../judo-platform): Model-driven OSGi runtime platform with REST APIs and Karaf deployment
+- [judo-runtime-core](../judo-runtime-core): Multi-module runtime engine — data access, business logic, REST, and security
+- [judo-runtime-core-jsl](../judo-runtime-core-jsl): JSL support for runtime core — model parsing through to DAOs and schema
+- [judo-services](../judo-services): OSGi runtime services enabling multiple data models in a single Karaf container
+- [judo-jsl-springboot-parent](../../spring/judo-jsl-springboot-parent): Parent POM for JUDO JSL Spring Boot applications
+- [judo-jsl-springboot-starter](../../spring/judo-jsl-springboot-starter): Spring Boot starter aggregating the entire JUDO runtime stack
 
 ## Optional
 
