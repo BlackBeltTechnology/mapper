@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>mapper-osgi</name>
+	<name>hu.blackbelt.mapper-mapper-reports</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -22,7 +22,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1761313513460</id>
+			<id>1761313513464</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
